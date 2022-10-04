@@ -1,0 +1,13 @@
+package com.motivation.mojaty;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MojatyApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MojatyApplication.class, args);
+	}
+
+}
