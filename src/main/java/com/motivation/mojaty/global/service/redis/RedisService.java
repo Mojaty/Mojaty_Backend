@@ -1,4 +1,4 @@
-package com.motivation.mojaty.global.service;
+package com.motivation.mojaty.global.service.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
