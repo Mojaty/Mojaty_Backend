@@ -18,7 +18,7 @@ public class GlobalException {
     public ErrorResponse handleException(CustomException e, HttpServletRequest request) {
         log.error("\nERROR_CODE: {} \n접근 경로: {} \nMessage: {}",
                 e.getErrorCode(), request.getRequestURI(), e.getErrorCode().getMessage());
-
+ 
         return ErrorResponse.builder()
                 .status(e.getErrorCode().getStatus())
                 .message(e.getErrorCode().getMessage())
