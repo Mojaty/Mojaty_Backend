@@ -2,11 +2,13 @@ package com.motivation.mojaty.global.provider.jwt;
 
 import com.motivation.mojaty.global.exception.jwt.ExpiredTokenException;
 import com.motivation.mojaty.global.exception.jwt.InvalidTokenException;
+import com.motivation.mojaty.global.service.redis.RedisService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +16,18 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
 import static com.motivation.mojaty.global.provider.jwt.JwtProperties.JWT_HEADER;
 import static com.motivation.mojaty.global.provider.jwt.JwtProperties.JWT_PREFIX;
 
+@RequiredArgsConstructor
 @Component
 public class JwtProvider {
+
+    private final RedisService redisService;
 
     @Value("${spring.security.jwt.secret}")
     private String SECRET_KEY;
@@ -84,6 +90,21 @@ public class JwtProvider {
         } catch (Exception e) {
             throw InvalidTokenException.EXCEPTION;
         }
+    }
+
+    public void logout(String email, String accessToken) {
+        long expiredAccessTokenTime = getExpiredTime(accessToken)
+                .getTime() - new Date().getTime();
+
+        redisService.setValues(BLACKLIST_AT_PREFIX + accessToken, email,
+                Duration.ofMillis(expiredAccessTokenTime));
+        redisService.deleteData(email);
+
+        redisService.setBlackList(accessToken, "ACCESS-TOKEN", expiredAccessTokenTime);
+    }
+
+    private Date getExpiredTime(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody().getExpiration();
     }
 
 }

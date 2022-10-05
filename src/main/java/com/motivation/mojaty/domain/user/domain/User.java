@@ -1,6 +1,8 @@
 package com.motivation.mojaty.domain.user.domain;
 
 import com.motivation.mojaty.domain.user.domain.type.Role;
+import com.motivation.mojaty.global.exception.application.CustomException;
+import com.motivation.mojaty.global.exception.application.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,5 +45,12 @@ public class User {
 
     public void encodedPassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
+    }
+
+
+    public void matchedPassword(PasswordEncoder passwordEncoder, User user, String password) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
     }
 }
