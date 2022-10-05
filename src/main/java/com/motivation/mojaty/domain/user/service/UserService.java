@@ -3,7 +3,6 @@ package com.motivation.mojaty.domain.user.service;
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
 import com.motivation.mojaty.domain.user.web.dto.request.UserJoinRequestDto;
-import com.motivation.mojaty.domain.user.web.dto.request.UserUpdatePasswordRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.request.UserUpdateRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.request.UserWithdrawalRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.response.UserResponseDto;
@@ -23,12 +22,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long join(UserJoinRequestDto requestDto) {
-        if(userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+    public Long join(UserJoinRequestDto req) {
+        if(userRepository.findByEmail(req.getEmail()).isPresent()) {
             throw new CustomException(ErrorCode.ALREADY_EXISTS_USER);
         }
 
-        User user = userRepository.save(requestDto.toEntity());
+        User user = userRepository.save(req.toEntity());
         user.addUserAuthority();
         user.encodedPassword(passwordEncoder);
         return user.getId();
@@ -41,33 +40,29 @@ public class UserService {
     }
 
     @Transactional
-    public Long updateUser(Long userId, UserUpdateRequestDto requestDto) {
+    public Long updateUser(Long userId, UserUpdateRequestDto req) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        user.update(requestDto.getEmail());
+        user.update(req.getEmail());
         return user.getId();
     }
 
     @Transactional
-    public Long updateUserPassword(Long userId, UserUpdatePasswordRequestDto requestDto) {
+    public Long updateUserPassword(Long userId, String newPassword) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if(!passwordEncoder.matches(user.getPassword(), requestDto.getBeforePassword())) {
-            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
-        }
-
-        user.updatePassword(requestDto.getNewPassword());
+        user.updatePassword(newPassword);
         return user.getId();
     }
 
     @Transactional
-    public Long withdrawUser(Long userId, UserWithdrawalRequestDto requestDto) {
+    public Long withdrawUser(Long userId, UserWithdrawalRequestDto req) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if(!passwordEncoder.matches(user.getPassword(), requestDto.getPassword())) {
+        if(!passwordEncoder.matches(user.getPassword(), req.getPassword())) {
             throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
         }
 

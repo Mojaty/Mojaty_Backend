@@ -1,7 +1,6 @@
 package com.motivation.mojaty.domain.user.web;
 
 import com.motivation.mojaty.domain.user.web.dto.request.UserJoinRequestDto;
-import com.motivation.mojaty.domain.user.web.dto.request.UserUpdatePasswordRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.request.UserUpdateRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.request.UserWithdrawalRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.response.UserResponseDto;
@@ -19,8 +18,8 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public Long join(@RequestBody @Valid UserJoinRequestDto requestDto) {
-        return userService.join(requestDto);
+    public Long join(@RequestBody @Valid UserJoinRequestDto req) {
+        return userService.join(req);
     }
 
     @GetMapping("/{userId}")
@@ -30,19 +29,19 @@ public class UserApiController {
 
     @PutMapping("/{userId}/edit")
     public Long updateUser(@PathVariable("userId") Long userId,
-                           @RequestBody @Valid UserUpdateRequestDto requestDto) {
-        return userService.updateUser(userId, requestDto);
+                           @RequestBody @Valid UserUpdateRequestDto req) {
+        return userService.updateUser(userId, req);
     }
 
     @PutMapping("/{userId}/edit/password")
     public Long updateUserPassword(@PathVariable("userId") Long userId,
-                                   @RequestBody @Valid UserUpdatePasswordRequestDto requestDto) {
-        return userService.updateUserPassword(userId, requestDto);
+                                   @RequestHeader("newPassword") String newPassword) {
+        return userService.updateUserPassword(userId, newPassword);
     }
 
     @DeleteMapping("/{userId}")
     public Long deleteUser(@PathVariable("userId") Long userId,
-                           @RequestBody @Valid UserWithdrawalRequestDto requestDto) {
-        return userService.withdrawUser(userId, requestDto);
+                           @RequestBody @Valid UserWithdrawalRequestDto req) {
+        return userService.withdrawUser(userId, req);
     }
 }
