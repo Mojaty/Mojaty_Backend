@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum Job {
-    STUDENT, DEVELOPER
+    STUDENT, DEVELOPER, EXERCISE, ETC
 }
