@@ -44,7 +44,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        user.update(req.getEmail());
+        user.update(req.getEmail(), req.getNickname());
         return user.getId();
     }
 

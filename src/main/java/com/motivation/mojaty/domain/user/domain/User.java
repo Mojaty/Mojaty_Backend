@@ -30,12 +30,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String nickname;
+
     @Enumerated(STRING)
     private Role role;
 
     @Builder
-    public User(String email, String password) {
+    public User(String email, String nickname, String password) {
         this.email = email;
+        this.nickname = nickname;
         this.password = password;
     }
 
@@ -47,8 +51,9 @@ public class User {
         this.password = passwordEncoder.encode(this.password);
     }
 
-    public void update(String email) {
+    public void update(String email, String nickname) {
         this.email = email;
+        this.nickname = nickname;
     }
 
     public void updatePassword(String password) {

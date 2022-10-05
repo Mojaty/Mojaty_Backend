@@ -6,6 +6,7 @@ import lombok.Getter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Getter
 public class UserJoinRequestDto {
@@ -13,6 +14,10 @@ public class UserJoinRequestDto {
     @NotNull(message = "이메일을 입력해주세요.")
     @Email
     private String email;
+
+    @NotNull(message = "닉네임을 입력해주세요.")
+    @Size(min = 2, max = 30)
+    private String nickname;
 
     @NotNull(message = "비밀번호를 입력해주세요.")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{6,20}",
@@ -22,6 +27,7 @@ public class UserJoinRequestDto {
     public User toEntity() {
         return User.builder()
                 .email(email)
+                .nickname(nickname)
                 .password(password)
                 .build();
     }
