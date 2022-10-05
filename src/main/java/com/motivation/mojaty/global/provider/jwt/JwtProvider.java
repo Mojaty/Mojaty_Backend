@@ -1,5 +1,7 @@
 package com.motivation.mojaty.global.provider.jwt;
 
+import com.motivation.mojaty.global.exception.application.CustomException;
+import com.motivation.mojaty.global.exception.application.ErrorCode;
 import com.motivation.mojaty.global.exception.jwt.ExpiredTokenException;
 import com.motivation.mojaty.global.exception.jwt.InvalidTokenException;
 import com.motivation.mojaty.global.service.redis.RedisService;
@@ -9,10 +11,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -25,6 +30,7 @@ import static com.motivation.mojaty.global.provider.jwt.JwtProperties.JWT_PREFIX
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtProvider {
 
     private final RedisService redisService;
@@ -68,8 +74,22 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        String bearer = request.getHeader(JWT_HEADER);
-        return parseToken(bearer);
+        Cookie[] cookies = request.getCookies();
+        String token = checkCookieByJwtName(cookies);
+        log.info(">>>>>>>resolveToken 거침");
+        return parseToken(token);
+    }
+
+    public String checkCookieByJwtName(Cookie[] cookies) {
+        if(cookies != null) {
+            for(Cookie cookie : cookies) {
+                if(cookie.getName().equals(JWT_HEADER)) {
+                    return parseToken(cookie.getValue());
+                }
+            }
+        }
+        else throw new CustomException(ErrorCode.INVALID_TOKEN);
+        return null;
     }
 
     public String parseToken(String bearerToken) {
