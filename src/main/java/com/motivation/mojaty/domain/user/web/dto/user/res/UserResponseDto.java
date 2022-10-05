@@ -1,4 +1,4 @@
-package com.motivation.mojaty.domain.user.web.dto.response;
+package com.motivation.mojaty.domain.user.web.dto.user.res;
 
 import com.motivation.mojaty.domain.user.domain.User;
 import lombok.Getter;

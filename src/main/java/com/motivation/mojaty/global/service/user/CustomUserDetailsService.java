@@ -2,8 +2,8 @@ package com.motivation.mojaty.global.service.user;
 
 import com.motivation.mojaty.domain.user.domain.UserRepository;
 import com.motivation.mojaty.global.auth.user.CustomUserDetails;
-import com.motivation.mojaty.global.exception.CustomException;
-import com.motivation.mojaty.global.exception.ErrorCode;
+import com.motivation.mojaty.global.exception.application.CustomException;
+import com.motivation.mojaty.global.exception.application.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

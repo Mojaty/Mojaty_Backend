@@ -1,13 +1,13 @@
-package com.motivation.mojaty.domain.user.service;
+package com.motivation.mojaty.domain.user.service.user;
 
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
-import com.motivation.mojaty.domain.user.web.dto.request.UserJoinRequestDto;
-import com.motivation.mojaty.domain.user.web.dto.request.UserUpdateRequestDto;
-import com.motivation.mojaty.domain.user.web.dto.request.UserWithdrawalRequestDto;
-import com.motivation.mojaty.domain.user.web.dto.response.UserResponseDto;
-import com.motivation.mojaty.global.exception.CustomException;
-import com.motivation.mojaty.global.exception.ErrorCode;
+import com.motivation.mojaty.domain.user.web.dto.user.req.UserJoinRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.user.req.UserUpdateRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.user.req.UserWithdrawalRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.user.res.UserResponseDto;
+import com.motivation.mojaty.global.exception.application.CustomException;
+import com.motivation.mojaty.global.exception.application.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

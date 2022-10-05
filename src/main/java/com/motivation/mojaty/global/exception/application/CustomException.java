@@ -1,4 +1,4 @@
-package com.motivation.mojaty.global.exception;
+package com.motivation.mojaty.global.exception.application;
 
 import lombok.Getter;
 
