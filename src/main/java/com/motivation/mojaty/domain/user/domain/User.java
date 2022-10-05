@@ -1,5 +1,6 @@
 package com.motivation.mojaty.domain.user.domain;
 
+import com.motivation.mojaty.domain.user.domain.type.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

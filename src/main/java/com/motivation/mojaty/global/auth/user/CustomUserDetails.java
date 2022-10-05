@@ -1,29 +1,35 @@
 package com.motivation.mojaty.global.auth.user;
 
+import com.motivation.mojaty.domain.user.domain.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
+    private final User user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        ArrayList<GrantedAuthority> auth = new ArrayList<>();
+        auth.add(new SimpleGrantedAuthority(user.getRole().name()));
+        return auth;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return user.getEmail();
     }
 
     @Override
