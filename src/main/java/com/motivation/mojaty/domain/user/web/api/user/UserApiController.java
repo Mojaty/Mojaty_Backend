@@ -1,10 +1,10 @@
-package com.motivation.mojaty.domain.user.web;
+package com.motivation.mojaty.domain.user.web.api.user;
 
-import com.motivation.mojaty.domain.user.web.dto.request.UserJoinRequestDto;
-import com.motivation.mojaty.domain.user.web.dto.request.UserUpdateRequestDto;
-import com.motivation.mojaty.domain.user.web.dto.request.UserWithdrawalRequestDto;
-import com.motivation.mojaty.domain.user.web.dto.response.UserResponseDto;
-import com.motivation.mojaty.domain.user.service.UserService;
+import com.motivation.mojaty.domain.user.web.dto.user.req.UserJoinRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.user.req.UserUpdateRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.user.req.UserWithdrawalRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.user.res.UserResponseDto;
+import com.motivation.mojaty.domain.user.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.motivation.mojaty.domain.user.web.dto.request;
+package com.motivation.mojaty.domain.user.web.dto.user.req;
 
 import lombok.Getter;
 
