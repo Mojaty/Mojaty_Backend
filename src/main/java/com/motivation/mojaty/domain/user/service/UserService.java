@@ -3,6 +3,7 @@ package com.motivation.mojaty.domain.user.service;
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
 import com.motivation.mojaty.domain.user.web.dto.request.UserJoinRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.request.UserUpdatePasswordRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.request.UserUpdateRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.request.UserWithdrawalRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.response.UserResponseDto;
@@ -44,7 +45,20 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        user.updateUser(requestDto.getEmail());
+        user.update(requestDto.getEmail());
+        return user.getId();
+    }
+
+    @Transactional
+    public Long updateUserPassword(Long userId, UserUpdatePasswordRequestDto requestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if(!passwordEncoder.matches(user.getPassword(), requestDto.getBeforePassword())) {
+            throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
+        }
+
+        user.updatePassword(requestDto.getNewPassword());
         return user.getId();
     }
 

@@ -1,6 +1,7 @@
 package com.motivation.mojaty.domain.user.web;
 
 import com.motivation.mojaty.domain.user.web.dto.request.UserJoinRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.request.UserUpdatePasswordRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.request.UserUpdateRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.request.UserWithdrawalRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.response.UserResponseDto;
@@ -31,6 +32,12 @@ public class UserApiController {
     public Long updateUser(@PathVariable("userId") Long userId,
                            @RequestBody @Valid UserUpdateRequestDto requestDto) {
         return userService.updateUser(userId, requestDto);
+    }
+
+    @PutMapping("/{userId}/edit/password")
+    public Long updateUserPassword(@PathVariable("userId") Long userId,
+                                   @RequestBody @Valid UserUpdatePasswordRequestDto requestDto) {
+        return userService.updateUserPassword(userId, requestDto);
     }
 
     @DeleteMapping("/{userId}")
