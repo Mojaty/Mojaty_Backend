@@ -75,20 +75,23 @@ public class JwtProvider {
 
     public String resolveToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        String token = checkCookieByJwtName(cookies);
-        log.info(">>>>>>>resolveToken 거침");
-        return parseToken(token);
+        checkCookie(cookies);
+        return getCookieByJwtName(cookies);
     }
 
-    public String checkCookieByJwtName(Cookie[] cookies) {
+    public void checkCookie(Cookie[] cookies) {
         if(cookies != null) {
-            for(Cookie cookie : cookies) {
-                if(cookie.getName().equals(JWT_HEADER)) {
-                    return parseToken(cookie.getValue());
-                }
-            }
+            getCookieByJwtName(cookies);
         }
         else throw new CustomException(ErrorCode.INVALID_TOKEN);
+    }
+
+    public String getCookieByJwtName(Cookie[] cookies) {
+        for(Cookie cookie : cookies) {
+            if(cookie.getName().equals(JWT_HEADER)) {
+                return parseToken(cookie.getValue());
+            }
+        }
         return null;
     }
 
