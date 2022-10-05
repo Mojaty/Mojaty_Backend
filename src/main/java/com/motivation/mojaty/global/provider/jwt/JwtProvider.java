@@ -88,15 +88,9 @@ public class JwtProvider {
     public String getCookieByJwtName(Cookie[] cookies) {
         for(Cookie cookie : cookies) {
             if(cookie.getName().equals(JWT_HEADER)) {
-                return parseToken(cookie.getValue());
+                return cookie.getValue();
             }
         }
-        return null;
-    }
-
-    public String parseToken(String bearerToken) {
-        if (bearerToken != null && bearerToken.startsWith(JWT_PREFIX))
-            return bearerToken.replace(JWT_PREFIX, "");
         return null;
     }
 
