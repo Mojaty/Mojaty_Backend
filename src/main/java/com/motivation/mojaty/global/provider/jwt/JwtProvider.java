@@ -80,10 +80,9 @@ public class JwtProvider {
     }
 
     public void checkCookie(Cookie[] cookies) {
-        if(cookies != null) {
-            getCookieByJwtName(cookies);
+        if(cookies == null) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
-        else throw new CustomException(ErrorCode.INVALID_TOKEN);
     }
 
     public String getCookieByJwtName(Cookie[] cookies) {
