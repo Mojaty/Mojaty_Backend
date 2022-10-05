@@ -44,4 +44,12 @@ public class User {
     public void encodedPassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
     }
+
+    public void update(String email) {
+        this.email = email;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }
