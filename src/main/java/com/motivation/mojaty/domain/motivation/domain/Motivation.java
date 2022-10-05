@@ -1,7 +1,7 @@
-package com.motivation.mojaty.domain.motivation;
+package com.motivation.mojaty.domain.motivation.domain;
 
-import com.motivation.mojaty.domain.motivation.type.ContentKind;
-import com.motivation.mojaty.domain.motivation.type.MotivationKind;
+import com.motivation.mojaty.domain.motivation.domain.type.ContentKind;
+import com.motivation.mojaty.domain.motivation.domain.type.MotivationKind;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
