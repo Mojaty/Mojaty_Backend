@@ -1,4 +1,4 @@
-package com.motivation.mojaty.domain.type;
+package com.motivation.mojaty.domain.motivation.type;
 
 public enum MotivationKind {
 
