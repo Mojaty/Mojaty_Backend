@@ -2,7 +2,6 @@ package com.motivation.mojaty.global.provider.jwt;
 
 import com.motivation.mojaty.global.exception.application.CustomException;
 import com.motivation.mojaty.global.exception.application.ErrorCode;
-import com.motivation.mojaty.global.exception.jwt.ExpiredTokenException;
 import com.motivation.mojaty.global.exception.jwt.InvalidTokenException;
 import com.motivation.mojaty.global.service.redis.RedisService;
 import io.jsonwebtoken.Claims;
@@ -13,7 +12,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +24,6 @@ import java.util.Base64;
 import java.util.Date;
 
 import static com.motivation.mojaty.global.provider.jwt.JwtProperties.JWT_HEADER;
-import static com.motivation.mojaty.global.provider.jwt.JwtProperties.JWT_PREFIX;
 
 @RequiredArgsConstructor
 @Component
@@ -79,6 +76,12 @@ public class JwtProvider {
         return getCookieByJwtName(cookies);
     }
 
+    public String resolveRefreshToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        checkCookie(cookies);
+        return getCookieByRefreshToken(cookies);
+    }
+
     public void checkCookie(Cookie[] cookies) {
         if(cookies == null) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
@@ -94,6 +97,15 @@ public class JwtProvider {
         return null;
     }
 
+    public String getCookieByRefreshToken(Cookie[] cookies) {
+        for(Cookie cookie : cookies) {
+            if(cookie.getName().equals("REFRESH-TOKEN")) {
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
+
     public Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
@@ -102,10 +114,20 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw ExpiredTokenException.EXCEPTION;
+            getNewAccessToken();
         } catch (Exception e) {
             throw InvalidTokenException.EXCEPTION;
         }
+        return null;
+    }
+
+    public void getNewAccessToken() {
+        /*
+        1. 쿠키에서 refresh Token 을 찾음
+        2. 리프래쉬 토큰이 유효한지 검사
+        3. 재발급
+        4. 브라우저에 있는 기존 쿠키는 삭제
+         */
     }
 
     public void logout(String email, String accessToken) {
@@ -122,5 +144,4 @@ public class JwtProvider {
     private Date getExpiredTime(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody().getExpiration();
     }
-
 }

@@ -12,6 +12,7 @@ import com.motivation.mojaty.global.provider.security.SecurityProvider;
 import com.motivation.mojaty.global.service.jwt.JwtValidateService;
 import com.motivation.mojaty.global.service.redis.RedisService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import static com.motivation.mojaty.global.provider.jwt.JwtProperties.REFRESH_TO
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -42,7 +44,7 @@ public class AuthService {
         redisService.setDataExpire(loginReq.getEmail(), refreshToken, REFRESH_TOKEN_VALID_TIME);
 
         Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken, ACCESS_TOKEN_VALID_TIME);
-        Cookie refreshTokenCookie = cookieProvider.createCookie("REFRESH-TOKEN", accessToken, REFRESH_TOKEN_VALID_TIME);
+        Cookie refreshTokenCookie = cookieProvider.createCookie("REFRESH-TOKEN", refreshToken, REFRESH_TOKEN_VALID_TIME);
 
         return TokenResponseDto.builder()
                 .accessToken(accessTokenCookie)
@@ -57,13 +59,14 @@ public class AuthService {
         jwtProvider.logout(user.getEmail(), accessToken);
     }
 
-    public TokenResponseDto getNewAccessToken(String refreshToken) {
-        jwtValidateService.validateRefreshToken(refreshToken);
-
-        String accessToken = jwtProvider.createAccessToken(jwtValidateService.getEmail(refreshToken));
-        Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken, ACCESS_TOKEN_VALID_TIME);
-        return TokenResponseDto.builder()
-                .accessToken(accessTokenCookie)
-                .build();
-    }
+//    public TokenResponseDto getNewAccessToken(HttpServletRequest req) {
+//        String refreshToken = jwtProvider.resolveRefreshToken(req);
+//        jwtValidateService.validateRefreshToken(refreshToken);
+//
+//        String accessToken = jwtProvider.createAccessToken(jwtValidateService.getEmail(refreshToken));
+//        Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken, ACCESS_TOKEN_VALID_TIME);
+//        return TokenResponseDto.builder()
+//                .accessToken(accessTokenCookie)
+//                .build();
+//    }
 }
