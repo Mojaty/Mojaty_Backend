@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .antMatchers("/user/join", "/auth/login", "/auth/refresh")
-                .antMatchers("/test");
+                .antMatchers("/notification/**");
     }
 
     @Bean

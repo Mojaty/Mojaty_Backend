@@ -33,13 +33,17 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
+    private String phoneNumber;
+
     @Enumerated(STRING)
     private Role role;
 
     @Builder
-    public User(String email, String nickname, String password) {
+    public User(String email, String nickname, String phoneNumber, String password) {
         this.email = email;
         this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
         this.password = password;
     }
 
