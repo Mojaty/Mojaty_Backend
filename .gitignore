@@ -20,6 +20,8 @@ bin/
 
 ### IntelliJ IDEA ###
 application.yml
+WebRestController
+
 app
 .idea
 *.iws
