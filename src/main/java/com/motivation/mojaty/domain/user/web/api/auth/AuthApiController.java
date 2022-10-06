@@ -4,6 +4,7 @@ import com.motivation.mojaty.domain.user.service.auth.AuthService;
 import com.motivation.mojaty.domain.user.web.dto.auth.req.LoginRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.auth.res.TokenResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @RestController
+@Slf4j
 public class AuthApiController {
 
     private final AuthService authService;
@@ -25,7 +27,7 @@ public class AuthApiController {
         TokenResponseDto tokenRes = authService.login(request);
 
         res.addCookie(tokenRes.getAccessToken());
-        res.addCookie(tokenRes.getRefreshToken());
+//        res.addCookie(tokenRes.getRefreshToken());
 
         return tokenRes;
     }
@@ -35,16 +37,14 @@ public class AuthApiController {
         authService.logout(req.getHeader("ACCESS-TOKEN"));
     }
 
-    @PutMapping("/refresh")
-    public TokenResponseDto getNewAccessToken(
-            HttpServletRequest req,
-            HttpServletResponse res
-    ) {
-        TokenResponseDto tokenRes = authService.getNewAccessToken(req.getHeader("REFRESH-TOKEN"));
-
-        res.addCookie(tokenRes.getAccessToken());
-        res.addCookie(tokenRes.getRefreshToken());
-
-        return tokenRes;
-    }
+//    @PutMapping("/refresh")
+//    public TokenResponseDto getNewAccessToken(HttpServletRequest req, HttpServletResponse res) {
+//        log.info(">>>>>>>>>controller");
+//        TokenResponseDto tokenRes = authService.getNewAccessToken(req);
+//
+//        res.addCookie(tokenRes.getAccessToken());
+//        res.addCookie(tokenRes.getRefreshToken());
+//
+//        return tokenRes;
+//    }
 }

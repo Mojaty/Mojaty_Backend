@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .antMatchers("/user/join", "/auth/login");
+                .antMatchers("/user/join", "/auth/login", "/auth/refresh");
     }
 
     @Bean
@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/user/join/**", "/auth/login/**").permitAll()
+//                .antMatchers("/auth/refresh/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(customUserDetailsService, jwtProvider, jwtValidateService),
