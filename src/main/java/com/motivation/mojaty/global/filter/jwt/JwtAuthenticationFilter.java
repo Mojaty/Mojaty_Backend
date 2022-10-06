@@ -1,7 +1,6 @@
 package com.motivation.mojaty.global.filter.jwt;
 
 import com.motivation.mojaty.global.provider.jwt.JwtProvider;
-import com.motivation.mojaty.global.service.jwt.JwtValidateService;
 import com.motivation.mojaty.global.service.user.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -24,19 +23,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtProvider jwtProvider;
-    private final JwtValidateService jwtValidateService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info(">>>>>>>>>>>>doFilter");
-        String token = jwtProvider.resolveToken(request);
+        String token = jwtProvider.resolveToken(request).getValue();
         log.info("token value {}", token);
         if (token != null) setAuthentication(token, request);
         filterChain.doFilter(request, response);
     }
 
     private void setAuthentication(String token, HttpServletRequest request) throws ExpiredJwtException {
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(jwtValidateService.getEmail(token));
+        log.info(">>>>>>>>setAuthentication {}", jwtProvider.getEmail(token));
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(jwtProvider.getEmail(token));
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

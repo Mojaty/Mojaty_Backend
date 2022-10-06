@@ -9,7 +9,6 @@ import com.motivation.mojaty.global.exception.application.ErrorCode;
 import com.motivation.mojaty.global.provider.cookie.CookieProvider;
 import com.motivation.mojaty.global.provider.jwt.JwtProvider;
 import com.motivation.mojaty.global.provider.security.SecurityProvider;
-import com.motivation.mojaty.global.service.jwt.JwtValidateService;
 import com.motivation.mojaty.global.service.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import static com.motivation.mojaty.global.provider.jwt.JwtProperties.ACCESS_TOKEN_VALID_TIME;
 import static com.motivation.mojaty.global.provider.jwt.JwtProperties.REFRESH_TOKEN_VALID_TIME;
@@ -28,7 +28,6 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
-    private final JwtValidateService jwtValidateService;
     private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
     private final CookieProvider cookieProvider;
@@ -59,14 +58,20 @@ public class AuthService {
         jwtProvider.logout(user.getEmail(), accessToken);
     }
 
-//    public TokenResponseDto getNewAccessToken(HttpServletRequest req) {
-//        String refreshToken = jwtProvider.resolveRefreshToken(req);
-//        jwtValidateService.validateRefreshToken(refreshToken);
-//
-//        String accessToken = jwtProvider.createAccessToken(jwtValidateService.getEmail(refreshToken));
-//        Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken, ACCESS_TOKEN_VALID_TIME);
-//        return TokenResponseDto.builder()
-//                .accessToken(accessTokenCookie)
-//                .build();
-//    }
+    public TokenResponseDto getNewAccessToken(HttpServletRequest req) {
+        String refreshToken = jwtProvider.resolveRefreshToken(req);
+        Cookie cookie = jwtProvider.resolveToken(req);
+        jwtProvider.validateRefreshToken(refreshToken);
+        jwtProvider.checkRefreshToken(refreshToken);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        String accessToken = jwtProvider.createAccessToken(jwtProvider.getEmail(refreshToken));
+
+        Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken, ACCESS_TOKEN_VALID_TIME);
+        return TokenResponseDto.builder()
+                .accessToken(accessTokenCookie)
+                .beforeAccessToken(cookie)
+                .build();
+    }
 }
