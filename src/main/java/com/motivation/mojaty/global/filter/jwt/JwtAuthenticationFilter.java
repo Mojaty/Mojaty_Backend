@@ -34,7 +34,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthentication(String token, HttpServletRequest request) throws ExpiredJwtException {
-        log.info(">>>>>>>>setAuthentication {}", jwtProvider.getEmail(token));
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(jwtProvider.getEmail(token));
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

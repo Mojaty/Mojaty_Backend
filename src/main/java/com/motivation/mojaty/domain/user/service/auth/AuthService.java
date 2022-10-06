@@ -51,9 +51,11 @@ public class AuthService {
                 .build();
     }
 
-    public void logout(String accessToken) {
+    public void logout(HttpServletRequest req) {
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_LOGIN));
+
+        String accessToken = jwtProvider.resolveToken(req).getValue();
 
         jwtProvider.logout(user.getEmail(), accessToken);
     }
