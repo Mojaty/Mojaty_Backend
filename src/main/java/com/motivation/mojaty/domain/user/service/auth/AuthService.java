@@ -3,6 +3,7 @@ package com.motivation.mojaty.domain.user.service.auth;
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
 import com.motivation.mojaty.domain.user.web.dto.auth.req.LoginRequestDto;
+import com.motivation.mojaty.domain.user.web.dto.auth.res.LogoutResponseDto;
 import com.motivation.mojaty.domain.user.web.dto.auth.res.TokenResponseDto;
 import com.motivation.mojaty.global.exception.application.CustomException;
 import com.motivation.mojaty.global.exception.application.ErrorCode;
@@ -51,17 +52,26 @@ public class AuthService {
                 .build();
     }
 
-    public void logout(HttpServletRequest req) {
+    public LogoutResponseDto logout(HttpServletRequest req) {
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_LOGIN));
 
-        String accessToken = jwtProvider.resolveToken(req).getValue();
+        Cookie accessToken = jwtProvider.resolveToken(req);
+        Cookie refreshToken = jwtProvider.resolveRefreshToken(req);
 
-        jwtProvider.logout(user.getEmail(), accessToken);
+        accessToken.setMaxAge(0);
+        accessToken.setPath("/");
+        refreshToken.setMaxAge(0);
+        refreshToken.setPath("/");
+//        jwtProvider.logout(user.getEmail(), accessToken);
+        return LogoutResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     public TokenResponseDto getNewAccessToken(HttpServletRequest req) {
-        String refreshToken = jwtProvider.resolveRefreshToken(req);
+        String refreshToken = jwtProvider.resolveRefreshToken(req).getValue();
         Cookie cookie = jwtProvider.resolveToken(req);
         jwtProvider.validateRefreshToken(refreshToken);
         jwtProvider.checkRefreshToken(refreshToken);
