@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -21,10 +20,7 @@ public class AuthApiController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public TokenResponseDto login(
-            @RequestBody @Valid LoginRequestDto request,
-            HttpServletResponse res
-    ) {
+    public TokenResponseDto login(@RequestBody LoginRequestDto request, HttpServletResponse res) {
         TokenResponseDto tokenRes = authService.login(request);
 
         res.addCookie(tokenRes.getAccessToken());

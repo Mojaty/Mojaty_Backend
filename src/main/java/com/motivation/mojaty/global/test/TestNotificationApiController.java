@@ -33,7 +33,7 @@ public class TestNotificationApiController {
         params.put("to", phoneNumber);
         params.put("from", phoneNumber);
         params.put("type", "sms");
-        params.put("text", "횐경설정 테스트입니다.");
+        params.put("text", "[MOJATY] 공부할 시간입니다!");
 
         try {
             JSONObject obj = (JSONObject) coolsms.send(params);

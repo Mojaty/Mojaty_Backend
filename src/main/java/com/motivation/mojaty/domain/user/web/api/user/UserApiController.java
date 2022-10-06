@@ -6,6 +6,7 @@ import com.motivation.mojaty.domain.user.web.dto.user.res.UserResponseDto;
 import com.motivation.mojaty.domain.user.web.dto.user.req.UserWithdrawalRequestDto;
 import com.motivation.mojaty.domain.user.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,12 +14,13 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@Slf4j
 public class UserApiController {
 
     private final UserService userService;
 
     @PostMapping("/join")
-    public Long join(@RequestBody @Valid UserJoinRequestDto req) {
+    public Long join(@RequestBody UserJoinRequestDto req) {
         return userService.join(req);
     }
 
