@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class GlobalException {
 
-    @ResponseStatus(value = HttpStatus.CONFLICT)
+    @ResponseStatus(value = HttpStatus.OK)
     @ExceptionHandler(CustomException.class)
     public ErrorResponse handleException(CustomException e, HttpServletRequest request) {
         log.error("\nERROR_CODE: {} \n접근 경로: {} \nMessage: {}",
@@ -46,5 +46,4 @@ public class GlobalException {
                 .message(ErrorCode.INTERNAL_SERVER_ERROR.getMessage())
                 .build();
     }
-
 }
