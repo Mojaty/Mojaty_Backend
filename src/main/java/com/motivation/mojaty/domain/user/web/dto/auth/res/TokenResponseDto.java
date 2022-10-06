@@ -10,6 +10,7 @@ import javax.servlet.http.Cookie;
 public class TokenResponseDto {
 
     private Cookie accessToken;
+    private Cookie beforeAccessToken;
     private Cookie refreshToken;
 
 }

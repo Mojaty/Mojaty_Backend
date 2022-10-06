@@ -3,7 +3,6 @@ package com.motivation.mojaty.global.config.security;
 import com.motivation.mojaty.global.filter.jwt.JwtAuthenticationFilter;
 import com.motivation.mojaty.global.filter.jwt.JwtExceptionFilter;
 import com.motivation.mojaty.global.provider.jwt.JwtProvider;
-import com.motivation.mojaty.global.service.jwt.JwtValidateService;
 import com.motivation.mojaty.global.service.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtProvider jwtProvider;
     private final CustomUserDetailsService customUserDetailsService;
-    private final JwtValidateService jwtValidateService;
-
 
     @Bean
     @Override
@@ -63,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/auth/refresh/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(customUserDetailsService, jwtProvider, jwtValidateService),
+                .addFilterBefore(new JwtAuthenticationFilter(customUserDetailsService, jwtProvider),
                         UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
 

@@ -2,6 +2,7 @@ package com.motivation.mojaty.global.provider.jwt;
 
 import com.motivation.mojaty.global.exception.application.CustomException;
 import com.motivation.mojaty.global.exception.application.ErrorCode;
+import com.motivation.mojaty.global.exception.jwt.ExpiredTokenException;
 import com.motivation.mojaty.global.exception.jwt.InvalidTokenException;
 import com.motivation.mojaty.global.service.redis.RedisService;
 import io.jsonwebtoken.Claims;
@@ -23,6 +24,7 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
+import static com.motivation.mojaty.global.provider.jwt.JwtProperties.ACCESS_TOKEN_VALID_TIME;
 import static com.motivation.mojaty.global.provider.jwt.JwtProperties.JWT_HEADER;
 
 @RequiredArgsConstructor
@@ -63,14 +65,14 @@ public class JwtProvider {
     }
 
     public String createAccessToken(String email) {
-        return createJwt(email, JwtProperties.ACCESS_TOKEN_VALID_TIME);
+        return createJwt(email, ACCESS_TOKEN_VALID_TIME);
     }
 
     public String createRefreshToken(String email) {
         return createJwt(email, JwtProperties.REFRESH_TOKEN_VALID_TIME);
     }
 
-    public String resolveToken(HttpServletRequest request) {
+    public Cookie resolveToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         checkCookie(cookies);
         return getCookieByJwtName(cookies);
@@ -88,10 +90,10 @@ public class JwtProvider {
         }
     }
 
-    public String getCookieByJwtName(Cookie[] cookies) {
+    public Cookie getCookieByJwtName(Cookie[] cookies) {
         for(Cookie cookie : cookies) {
             if(cookie.getName().equals(JWT_HEADER)) {
-                return cookie.getValue();
+                return cookie;
             }
         }
         return null;
@@ -106,28 +108,38 @@ public class JwtProvider {
         return null;
     }
 
-    public Claims extractAllClaims(String token) {
+    public String getEmail(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getSigningKey(SECRET_KEY))
                     .build()
                     .parseClaimsJws(token)
-                    .getBody();
+                    .getBody().get("email", String.class);
         } catch (ExpiredJwtException e) {
-            getNewAccessToken();
+            throw ExpiredTokenException.EXCEPTION;
         } catch (Exception e) {
             throw InvalidTokenException.EXCEPTION;
         }
-        return null;
     }
 
-    public void getNewAccessToken() {
-        /*
-        1. 쿠키에서 refresh Token 을 찾음
-        2. 리프래쉬 토큰이 유효한지 검사
-        3. 재발급
-        4. 브라우저에 있는 기존 쿠키는 삭제
-         */
+    public void validateRefreshToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey(SECRET_KEY))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw ExpiredTokenException.EXCEPTION;
+        } catch (Exception e) {
+            throw InvalidTokenException.EXCEPTION;
+        }
+    }
+
+    public void checkRefreshToken(String token) {
+        if(!redisService.getData(getEmail(token)).equals(token)) {
+            throw InvalidTokenException.EXCEPTION;
+        }
     }
 
     public void logout(String email, String accessToken) {
@@ -142,6 +154,6 @@ public class JwtProvider {
     }
 
     private Date getExpiredTime(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token).getBody().getExpiration();
+        return Jwts.parserBuilder().setSigningKey(getSigningKey(SECRET_KEY)).build().parseClaimsJws(token).getBody().getExpiration();
     }
 }
