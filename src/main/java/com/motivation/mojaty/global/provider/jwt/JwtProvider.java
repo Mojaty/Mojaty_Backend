@@ -78,7 +78,7 @@ public class JwtProvider {
         return getCookieByJwtName(cookies);
     }
 
-    public String resolveRefreshToken(HttpServletRequest request) {
+    public Cookie resolveRefreshToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         checkCookie(cookies);
         return getCookieByRefreshToken(cookies);
@@ -99,10 +99,10 @@ public class JwtProvider {
         return null;
     }
 
-    public String getCookieByRefreshToken(Cookie[] cookies) {
+    public Cookie getCookieByRefreshToken(Cookie[] cookies) {
         for(Cookie cookie : cookies) {
             if(cookie.getName().equals("REFRESH-TOKEN")) {
-                return cookie.getValue();
+                return cookie;
             }
         }
         return null;
@@ -142,16 +142,16 @@ public class JwtProvider {
         }
     }
 
-    public void logout(String email, String accessToken) {
-        long expiredAccessTokenTime = getExpiredTime(accessToken)
-                .getTime() - new Date().getTime();
-
-        redisService.setValues(BLACKLIST_AT_PREFIX + accessToken, email,
-                Duration.ofMillis(expiredAccessTokenTime));
-        redisService.deleteData(email);
-
-        redisService.setBlackList(accessToken, "ACCESS-TOKEN", expiredAccessTokenTime);
-    }
+//    public void logout(String email, String accessToken) {
+//        long expiredAccessTokenTime = getExpiredTime(accessToken)
+//                .getTime() - new Date().getTime();
+//
+//        redisService.setValues(BLACKLIST_AT_PREFIX + accessToken, email,
+//                Duration.ofMillis(expiredAccessTokenTime));
+//        redisService.deleteData(email);
+//
+//        redisService.setBlackList(accessToken, "ACCESS-TOKEN", expiredAccessTokenTime);
+//    }
 
     private Date getExpiredTime(String token) {
         return Jwts.parserBuilder().setSigningKey(getSigningKey(SECRET_KEY)).build().parseClaimsJws(token).getBody().getExpiration();
