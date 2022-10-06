@@ -35,7 +35,7 @@ public class AuthApiController {
 
     @DeleteMapping("/logout")
     public void logout(HttpServletRequest req) {
-        authService.logout(req.getHeader("ACCESS-TOKEN"));
+        authService.logout(req);
     }
 
     @PutMapping("/refresh")
