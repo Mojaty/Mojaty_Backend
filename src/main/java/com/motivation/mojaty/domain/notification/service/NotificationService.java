@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 @Service
@@ -25,6 +23,8 @@ import java.util.HashMap;
 public class NotificationService {
 
     private final UserRepository userRepository;
+
+    private final String cron = "0 * * * * ?";
 
     @Value("${coolsms.api_key}")
     private String api_key;
@@ -35,17 +35,17 @@ public class NotificationService {
     @Value("${coolsms.phone_number}")
     private String phoneNumber;
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm:ss");
+    public void change(NotificationRequestDto req) {
+        String cron = "0 " + req.getMinute() + " " + req.getHour() + " * * ?";
+    }
 
-    @Scheduled(cron = "0 10 4 * * ?")
+    @Scheduled(cron = cron)
     public void send() {
         Message coolsms = new Message(api_key, api_secret);
         HashMap<String, String> params = new HashMap<>();
 
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
-
-        log.info("현재시간 - {}", formatter.format(LocalDateTime.now()));
 
         params.put("to", user.getPhoneNumber());
         params.put("from", phoneNumber);

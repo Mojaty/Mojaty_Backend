@@ -53,17 +53,12 @@ public class AuthService {
     }
 
     public LogoutResponseDto logout(HttpServletRequest req) {
-        User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_LOGIN));
-
         Cookie accessToken = jwtProvider.resolveToken(req);
         Cookie refreshToken = jwtProvider.resolveRefreshToken(req);
 
-        accessToken.setMaxAge(0);
-        accessToken.setPath("/");
-        refreshToken.setMaxAge(0);
-        refreshToken.setPath("/");
-//        jwtProvider.logout(user.getEmail(), accessToken);
+        expireCookie(accessToken);
+        expireCookie(refreshToken);
+
         return LogoutResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -85,5 +80,10 @@ public class AuthService {
                 .accessToken(accessTokenCookie)
                 .beforeAccessToken(cookie)
                 .build();
+    }
+
+    private void expireCookie(Cookie cookie) {
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
     }
 }

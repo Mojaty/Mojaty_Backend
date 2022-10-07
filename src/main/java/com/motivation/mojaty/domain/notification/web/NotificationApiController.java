@@ -16,7 +16,7 @@ public class NotificationApiController {
     private final NotificationService notificationService;
 
     @PostMapping("/send")
-    public void send() {
-        notificationService.send();
+    public void send(@RequestBody NotificationRequestDto req) {
+        notificationService.change(req);
     }
 }
