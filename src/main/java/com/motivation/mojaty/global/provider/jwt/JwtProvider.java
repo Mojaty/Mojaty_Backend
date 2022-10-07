@@ -20,7 +20,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
@@ -36,9 +35,6 @@ public class JwtProvider {
 
     @Value("${spring.security.jwt.secret}")
     private String SECRET_KEY;
-
-    @Value("${spring.security.jwt.blacklist.access-token}")
-    private String BLACKLIST_AT_PREFIX;
 
     @PostConstruct
     protected void init() {
@@ -75,13 +71,13 @@ public class JwtProvider {
     public Cookie resolveToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         checkCookie(cookies);
-        return getCookieByJwtName(cookies);
+        return getCookieByJwtName(cookies, JWT_HEADER);
     }
 
     public Cookie resolveRefreshToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         checkCookie(cookies);
-        return getCookieByRefreshToken(cookies);
+        return getCookieByJwtName(cookies, "REFRESH-TOKEN");
     }
 
     public void checkCookie(Cookie[] cookies) {
@@ -90,18 +86,9 @@ public class JwtProvider {
         }
     }
 
-    public Cookie getCookieByJwtName(Cookie[] cookies) {
+    public Cookie getCookieByJwtName(Cookie[] cookies, String headerName) {
         for(Cookie cookie : cookies) {
-            if(cookie.getName().equals(JWT_HEADER)) {
-                return cookie;
-            }
-        }
-        return null;
-    }
-
-    public Cookie getCookieByRefreshToken(Cookie[] cookies) {
-        for(Cookie cookie : cookies) {
-            if(cookie.getName().equals("REFRESH-TOKEN")) {
+            if(cookie.getName().equals(headerName)) {
                 return cookie;
             }
         }
@@ -140,20 +127,5 @@ public class JwtProvider {
         if(!redisService.getData(getEmail(token)).equals(token)) {
             throw InvalidTokenException.EXCEPTION;
         }
-    }
-
-//    public void logout(String email, String accessToken) {
-//        long expiredAccessTokenTime = getExpiredTime(accessToken)
-//                .getTime() - new Date().getTime();
-//
-//        redisService.setValues(BLACKLIST_AT_PREFIX + accessToken, email,
-//                Duration.ofMillis(expiredAccessTokenTime));
-//        redisService.deleteData(email);
-//
-//        redisService.setBlackList(accessToken, "ACCESS-TOKEN", expiredAccessTokenTime);
-//    }
-
-    private Date getExpiredTime(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey(SECRET_KEY)).build().parseClaimsJws(token).getBody().getExpiration();
     }
 }
