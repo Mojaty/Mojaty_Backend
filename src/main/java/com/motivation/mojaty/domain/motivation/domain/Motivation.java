@@ -3,6 +3,7 @@ package com.motivation.mojaty.domain.motivation.domain;
 import com.motivation.mojaty.domain.motivation.domain.type.ContentKind;
 import com.motivation.mojaty.domain.motivation.domain.type.MotivationKind;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,10 @@ public class Motivation {
     @Enumerated(STRING) // 컨텐츠 종류(영상, 사진)
     private ContentKind contentKind;
 
+    @Builder
+    public Motivation(String content, MotivationKind motivationKind, ContentKind contentKind) {
+        this.content = content;
+        this.motivationKind = motivationKind;
+        this.contentKind = contentKind;
+    }
 }
