@@ -3,6 +3,7 @@ package com.motivation.mojaty.domain.motivation.service;
 import com.motivation.mojaty.domain.motivation.domain.MotivationRepository;
 import com.motivation.mojaty.domain.motivation.domain.type.ContentKind;
 import com.motivation.mojaty.domain.motivation.domain.type.MotivationKind;
+import com.motivation.mojaty.domain.motivation.web.dto.req.MotivationCreateRequestDto;
 import com.motivation.mojaty.domain.motivation.web.dto.res.MotivationResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,11 @@ import static java.util.stream.Collectors.*;
 public class MotivationService {
 
     private final MotivationRepository motivationRepository;
+
+    @Transactional
+    public void createMotivation(MotivationCreateRequestDto req) {
+        motivationRepository.save(req.toEntity());
+    }
 
     public List<MotivationResponseDto> getMotivationAll(int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, 20);
