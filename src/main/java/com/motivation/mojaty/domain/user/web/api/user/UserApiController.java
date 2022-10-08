@@ -21,6 +21,7 @@ public class UserApiController {
 
     @PostMapping("/join")
     public Long join(@RequestBody UserJoinRequestDto req) {
+        log.info(">>>>>>>>> success " + req.toString());
         return userService.join(req);
     }
 

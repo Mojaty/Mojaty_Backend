@@ -7,12 +7,10 @@ import javax.servlet.http.Cookie;
 @Component
 public class CookieProvider {
 
-    public Cookie createCookie(String name, String value, long time) {
+    public Cookie createCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
-        cookie.setMaxAge((int) time);
         cookie.setPath("/");
         return cookie;
     }
-
 }
