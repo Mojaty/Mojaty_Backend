@@ -43,8 +43,8 @@ public class AuthService {
         final String refreshToken = jwtProvider.createRefreshToken(loginReq.getEmail());
         redisService.setDataExpire(loginReq.getEmail(), refreshToken, REFRESH_TOKEN_VALID_TIME);
 
-        Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken, ACCESS_TOKEN_VALID_TIME);
-        Cookie refreshTokenCookie = cookieProvider.createCookie("REFRESH-TOKEN", refreshToken, REFRESH_TOKEN_VALID_TIME);
+        Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken);
+        Cookie refreshTokenCookie = cookieProvider.createCookie("REFRESH-TOKEN", refreshToken);
 
         return TokenResponseDto.builder()
                 .accessToken(accessTokenCookie)
@@ -70,12 +70,11 @@ public class AuthService {
         Cookie cookie = jwtProvider.resolveToken(req);
         jwtProvider.validateRefreshToken(refreshToken);
         jwtProvider.checkRefreshToken(refreshToken);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
+        expireCookie(cookie);
 
         String accessToken = jwtProvider.createAccessToken(jwtProvider.getEmail(refreshToken));
 
-        Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken, ACCESS_TOKEN_VALID_TIME);
+        Cookie accessTokenCookie = cookieProvider.createCookie("ACCESS-TOKEN", accessToken);
         return TokenResponseDto.builder()
                 .accessToken(accessTokenCookie)
                 .beforeAccessToken(cookie)

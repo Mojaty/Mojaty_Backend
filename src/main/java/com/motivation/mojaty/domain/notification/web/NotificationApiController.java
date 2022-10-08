@@ -1,7 +1,6 @@
 package com.motivation.mojaty.domain.notification.web;
 
 import com.motivation.mojaty.domain.notification.service.NotificationService;
-import com.motivation.mojaty.domain.notification.web.dto.request.NotificationRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +14,8 @@ public class NotificationApiController {
 
     private final NotificationService notificationService;
 
-    @PostMapping("/send")
-    public void send(@RequestBody NotificationRequestDto req) {
-        notificationService.change(req);
+    @PostMapping("/new")
+    public void saveNotification(@RequestBody String token) {
+        notificationService.saveNotification(token);
     }
 }

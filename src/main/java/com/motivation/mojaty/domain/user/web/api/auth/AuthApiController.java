@@ -1,5 +1,6 @@
 package com.motivation.mojaty.domain.user.web.api.auth;
 
+import com.motivation.mojaty.domain.notification.service.NotificationService;
 import com.motivation.mojaty.domain.user.service.auth.AuthService;
 import com.motivation.mojaty.domain.user.web.dto.auth.req.LoginRequestDto;
 import com.motivation.mojaty.domain.user.web.dto.auth.res.LogoutResponseDto;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthApiController {
 
     private final AuthService authService;
+    private final NotificationService notificationService;
 
     @PostMapping("/login")
     public TokenResponseDto login(@RequestBody LoginRequestDto request, HttpServletResponse res) {
@@ -32,6 +34,7 @@ public class AuthApiController {
     @DeleteMapping("/logout")
     public void logout(HttpServletRequest req, HttpServletResponse res) {
         LogoutResponseDto dto = authService.logout(req);
+        notificationService.deleteNotification();
         res.addCookie(dto.getAccessToken());
         res.addCookie(dto.getRefreshToken());
     }
