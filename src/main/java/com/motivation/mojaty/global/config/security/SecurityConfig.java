@@ -1,6 +1,6 @@
 package com.motivation.mojaty.global.config.security;
 
-import com.motivation.mojaty.global.filter.jwt.JwtAuthenticationFilter;
+import com.motivation.mojaty.global.filter.jwt.JwtAuthorizationFilter;
 import com.motivation.mojaty.global.filter.jwt.JwtExceptionFilter;
 import com.motivation.mojaty.global.provider.jwt.JwtProvider;
 import com.motivation.mojaty.global.service.user.CustomUserDetailsService;
@@ -40,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .antMatchers("/user/join")
-                .antMatchers("/auth/login");
+                .antMatchers("/motivation")
+                .antMatchers("/test");
     }
 
     @Bean
@@ -58,11 +59,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("auth/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(customUserDetailsService, jwtProvider),
+                .addFilterBefore(new JwtAuthorizationFilter(customUserDetailsService, jwtProvider),
                         UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class);
     }
 
     @Bean

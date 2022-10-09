@@ -1,5 +1,6 @@
 package com.motivation.mojaty.global.filter.jwt;
 
+import com.motivation.mojaty.domain.user.web.dto.auth.req.LoginRequestDto;
 import com.motivation.mojaty.global.provider.jwt.JwtProvider;
 import com.motivation.mojaty.global.service.user.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -9,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtProvider jwtProvider;
@@ -28,17 +28,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info(">>>>>>>>>>>>doFilter");
-        String token = jwtProvider.resolveToken(request).getValue();
+        String token = jwtProvider.resolveToken(request);
         log.info("token value {}", token);
-        if (token != null) setAuthentication(token, request);
+        if (token != null) setAuthentication(token);
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthentication(String token, HttpServletRequest request) throws ExpiredJwtException {
+    private void setAuthentication(String token) throws ExpiredJwtException {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(jwtProvider.getEmail(token));
-
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

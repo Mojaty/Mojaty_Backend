@@ -1,10 +1,13 @@
 package com.motivation.mojaty.domain.motivation.service;
 
+import com.motivation.mojaty.domain.motivation.domain.Motivation;
 import com.motivation.mojaty.domain.motivation.domain.MotivationRepository;
 import com.motivation.mojaty.domain.motivation.domain.type.ContentKind;
 import com.motivation.mojaty.domain.motivation.domain.type.MotivationKind;
 import com.motivation.mojaty.domain.motivation.web.dto.req.MotivationCreateRequestDto;
 import com.motivation.mojaty.domain.motivation.web.dto.res.MotivationResponseDto;
+import com.motivation.mojaty.global.exception.application.CustomException;
+import com.motivation.mojaty.global.exception.application.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
