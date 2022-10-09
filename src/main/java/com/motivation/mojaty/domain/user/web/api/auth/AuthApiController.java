@@ -25,6 +25,11 @@ public class AuthApiController {
         return authService.login(request);
     }
 
+    @DeleteMapping("/notification/delete")
+    public void deleteNotification() {
+        notificationService.deleteNotification();
+    }
+
     @PutMapping("/refresh")
     public TokenResponseDto getNewAccessToken(HttpServletRequest req) {
         return authService.getNewAccessToken(req);

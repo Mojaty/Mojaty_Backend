@@ -6,7 +6,8 @@ import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushNotification;
 import com.motivation.mojaty.domain.notification.domain.Notification;
 import com.motivation.mojaty.domain.notification.domain.NotificationRepository;
-import com.motivation.mojaty.domain.notification.web.dto.request.NotificationRequestDto;
+import com.motivation.mojaty.domain.notification.web.dto.request.NotificationCreateRequestDto;
+import com.motivation.mojaty.domain.notification.web.dto.request.FcmMessage;
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
 import com.motivation.mojaty.global.exception.application.CustomException;
@@ -28,27 +29,31 @@ public class NotificationService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void saveNotification(String token) {
+    public void saveNotification(NotificationCreateRequestDto req) {
+        log.info(">>>>>>>>>>>saveNotification");
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
 
-        Notification notification = Notification.builder()
-                .token(token)
-                .build();
+        Notification notification = req.toEntity();
 
         notification.confirmUser(user);
         notificationRepository.save(notification);
     }
 
-    public void sendNotification(NotificationRequestDto req) throws ExecutionException, InterruptedException {
+    public void sendNotification(FcmMessage req) {
         Message message = Message.builder()
-                .setToken(req.getToken())
+                .setToken(req.getMessage().getToken())
                 .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
-                        .setNotification(new WebpushNotification(req.getTitle(), req.getMessage()))
+                        .setNotification(new WebpushNotification(req.getMessage().getNotification().getTitle(), req.getMessage().getNotification().getBody()))
                         .build())
                 .build();
 
-        String response = FirebaseMessaging.getInstance().sendAsync(message).get();
+        String response = null;
+        try {
+            response = FirebaseMessaging.getInstance().sendAsync(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error(e.getMessage());
+        }
         log.info(">>>>Send message : " + response);
     }
 
@@ -59,6 +64,7 @@ public class NotificationService {
         Notification notification = notificationRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+        log.info(">>>>>>>메세지 토큰 : " + notification.getToken());
         return notification.getToken();
     }
 
