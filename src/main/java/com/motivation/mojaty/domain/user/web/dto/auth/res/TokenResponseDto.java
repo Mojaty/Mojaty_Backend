@@ -9,8 +9,7 @@ import javax.servlet.http.Cookie;
 @Builder
 public class TokenResponseDto {
 
-    private Cookie accessToken;
-    private Cookie beforeAccessToken;
-    private Cookie refreshToken;
+    private String accessToken;
+    private String refreshToken;
 
 }

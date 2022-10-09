@@ -15,7 +15,7 @@ public class ScheduledService {
 
     private final NotificationService notificationService;
 
-    @Scheduled(cron = "0 2 2 * * ?")
+    @Scheduled(cron = "0 45 2 * * ?")
     public void scheduledSend() throws ExecutionException, InterruptedException {
         NotificationRequestDto notificationRequestDto = NotificationRequestDto.builder()
                 .title("Mojaty")

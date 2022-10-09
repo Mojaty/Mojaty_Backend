@@ -1,5 +1,6 @@
 package com.motivation.mojaty.global.provider.jwt;
 
+import com.motivation.mojaty.domain.user.web.dto.auth.req.LoginRequestDto;
 import com.motivation.mojaty.global.exception.application.CustomException;
 import com.motivation.mojaty.global.exception.application.ErrorCode;
 import com.motivation.mojaty.global.exception.jwt.ExpiredTokenException;
@@ -68,31 +69,12 @@ public class JwtProvider {
         return createJwt(email, JwtProperties.REFRESH_TOKEN_VALID_TIME);
     }
 
-    public Cookie resolveToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        checkCookie(cookies);
-        return getCookieByJwtName(cookies, JWT_HEADER);
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader(JWT_HEADER);
     }
 
-    public Cookie resolveRefreshToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        checkCookie(cookies);
-        return getCookieByJwtName(cookies, "REFRESH-TOKEN");
-    }
-
-    public void checkCookie(Cookie[] cookies) {
-        if(cookies == null) {
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
-        }
-    }
-
-    public Cookie getCookieByJwtName(Cookie[] cookies, String headerName) {
-        for(Cookie cookie : cookies) {
-            if(cookie.getName().equals(headerName)) {
-                return cookie;
-            }
-        }
-        return null;
+    public String resolveRefreshToken(HttpServletRequest request) {
+       return request.getHeader("REFRESH-TOKEN");
     }
 
     public String getEmail(String token) {

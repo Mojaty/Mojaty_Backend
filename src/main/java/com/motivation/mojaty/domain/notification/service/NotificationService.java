@@ -53,7 +53,6 @@ public class NotificationService {
     }
 
     public String getNotificationToken() {
-        log.info(">>>>>>>>>>>>getNotificationToken");
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
 
