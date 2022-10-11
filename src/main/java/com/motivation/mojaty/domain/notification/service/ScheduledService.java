@@ -3,7 +3,10 @@ package com.motivation.mojaty.domain.notification.service;
 import com.motivation.mojaty.domain.notification.web.dto.request.FcmMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
@@ -12,7 +15,8 @@ public class ScheduledService {
 
     private final NotificationService notificationService;
 
-    public void scheduledSend() {
+    @Scheduled(cron = "0 52 1 * * ?")
+    public void scheduledSend() throws ExecutionException, InterruptedException {
         log.info(">>>>>>>메세지 보내기 시작");
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()

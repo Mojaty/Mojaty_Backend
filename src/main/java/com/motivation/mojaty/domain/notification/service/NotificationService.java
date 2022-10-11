@@ -1,5 +1,6 @@
 package com.motivation.mojaty.domain.notification.service;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.WebpushConfig;
@@ -10,15 +11,22 @@ import com.motivation.mojaty.domain.notification.web.dto.request.NotificationCre
 import com.motivation.mojaty.domain.notification.web.dto.request.FcmMessage;
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
+import com.motivation.mojaty.global.config.fcm.FCMInitializer;
+import com.motivation.mojaty.global.config.fcm.FcmScopeUtil;
 import com.motivation.mojaty.global.exception.application.CustomException;
 import com.motivation.mojaty.global.exception.application.ErrorCode;
 import com.motivation.mojaty.global.provider.security.SecurityProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import static com.motivation.mojaty.global.config.fcm.FcmScopeUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +38,6 @@ public class NotificationService {
 
     @Transactional
     public void saveNotification(NotificationCreateRequestDto req) {
-        log.info(">>>>>>>>>>>saveNotification");
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
 
@@ -40,21 +47,17 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void sendNotification(FcmMessage req) {
+    public void sendNotification(FcmMessage req) throws ExecutionException, InterruptedException {
         Message message = Message.builder()
                 .setToken(req.getMessage().getToken())
-                .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
+                .setWebpushConfig(WebpushConfig.builder()
+                        .putHeader("ttl", "300")
                         .setNotification(new WebpushNotification(req.getMessage().getNotification().getTitle(), req.getMessage().getNotification().getBody()))
                         .build())
                 .build();
 
-        String response = null;
-        try {
-            response = FirebaseMessaging.getInstance().sendAsync(message).get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error(e.getMessage());
-        }
-        log.info(">>>>Send message : " + response);
+        String response = FirebaseMessaging.getInstance().sendAsync(message).get();
+        log.info(">>>>Sent message : " + response);
     }
 
     public String getNotificationToken() {
@@ -77,4 +80,5 @@ public class NotificationService {
 
         notificationRepository.delete(notification);
     }
+
 }

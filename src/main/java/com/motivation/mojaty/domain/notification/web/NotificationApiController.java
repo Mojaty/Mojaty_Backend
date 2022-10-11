@@ -22,8 +22,4 @@ public class NotificationApiController {
         notificationService.saveNotification(req);
     }
 
-    @PostMapping("/send")
-    public void send() {
-        scheduledService.scheduledSend();
-    }
 }
