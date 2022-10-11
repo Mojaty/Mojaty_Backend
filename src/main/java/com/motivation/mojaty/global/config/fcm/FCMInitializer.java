@@ -24,15 +24,12 @@ public class FCMInitializer {
     public void initialize() {
         try {
             GoogleCredentials googleCredentials = GoogleCredentials
-                    .fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream())
-                    .createScoped(List.of(SCOPES));
+                    .fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream());
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(googleCredentials)
                     .build();
             FirebaseApp.initializeApp(options);
             googleCredentials.refreshIfExpired();
-            log.info(">>>>>>>>>>>Firebase application start");
-            log.info(">>>>>>>>>token : " + googleCredentials.getAccessToken().getTokenValue());
         } catch (IOException e) {
             log.info(">>>>>>>>FCM error");
             log.error(">>>>>>FCM error message : " + e.getMessage());

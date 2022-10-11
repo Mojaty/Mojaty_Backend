@@ -21,9 +21,4 @@ public class NotificationApiController {
     public void saveNotification(@RequestBody NotificationCreateRequestDto req) {
         notificationService.saveNotification(req);
     }
-
-    @PostMapping("/send")
-    public void send() {
-        scheduledService.scheduledSend();
-    }
 }
