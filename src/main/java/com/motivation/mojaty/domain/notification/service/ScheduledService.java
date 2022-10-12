@@ -23,13 +23,9 @@ public class ScheduledService {
 
     private FcmMessage makeMessage() {
         return FcmMessage.builder()
-                .message(FcmMessage.Message.builder()
-                        .token(notificationService.getNotificationToken())
-                        .notification(FcmMessage.Notification.builder()
-                                .title("Mojaty")
-                                .body("공부할 시간입니다!")
-                                .build())
-                        .build())
+                .token(notificationService.getNotificationToken())
+                .title("Mojaty")
+                .body("공부할 시간입니다!")
                 .build();
     }
 }
