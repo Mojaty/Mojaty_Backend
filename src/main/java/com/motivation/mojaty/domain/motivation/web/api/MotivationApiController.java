@@ -23,29 +23,7 @@ public class MotivationApiController {
     }
 
     @GetMapping("")
-    public List<MotivationResponseDto> getMotivationAll(@RequestParam(value = "page", defaultValue = "0") int pageNum) {
-        return motivationService.getMotivationAll(pageNum);
-    }
-
-    @GetMapping("/kind")
-    public List<MotivationResponseDto> getMotivationByKind(
-            @RequestParam("kind") MotivationKind kind,
-            @RequestParam(value = "page", defaultValue = "0") int pageNum) {
-        return motivationService.getMotivationByKind(kind, pageNum);
-    }
-
-    @GetMapping("/kind/content")
-    public List<MotivationResponseDto> getMotivationByKindAndContent
-            (@RequestParam("kind") MotivationKind kind,
-             @RequestParam("content")ContentKind content,
-             @RequestParam(value = "page", defaultValue = "0") int pageNum) {
-        return motivationService.getMotivationByKindAndContent(kind, content, pageNum);
-    }
-
-    @GetMapping("/content")
-    public List<MotivationResponseDto> getMotivationByContent
-            (@RequestParam("content") ContentKind content,
-             @RequestParam(value = "page", defaultValue = "0") int pageNum) {
-        return motivationService.getMotivationByContent(content, pageNum);
+    public List<MotivationResponseDto> getMotivationAll() {
+        return motivationService.getMotivationAll();
     }
 }

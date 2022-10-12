@@ -18,16 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthApiController {
 
     private final AuthService authService;
-    private final NotificationService notificationService;
 
     @PostMapping("/login")
     public TokenResponseDto login(@RequestBody LoginRequestDto request) {
         return authService.login(request);
-    }
-
-    @DeleteMapping("/notification/delete")
-    public void deleteNotification() {
-        notificationService.deleteNotification();
     }
 
     @PutMapping("/refresh")

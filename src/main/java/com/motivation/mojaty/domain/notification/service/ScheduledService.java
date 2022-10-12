@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ExecutionException;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -14,9 +16,13 @@ public class ScheduledService {
     private final NotificationService notificationService;
 
     @Scheduled(cron = "0 5,11 * * * *") // 새벽 5시와 밤 11시
-    public void scheduledSend() {
-        log.info(">>>>>>>메세지 보내기 시작");
-        FcmMessage fcmMessage = FcmMessage.builder()
+    public void scheduledMessage() throws ExecutionException, InterruptedException {
+        notificationService.sendNotification(makeMessage());
+        log.info("보내졌습니다!");
+    }
+
+    private FcmMessage makeMessage() {
+        return FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(notificationService.getNotificationToken())
                         .notification(FcmMessage.Notification.builder()
@@ -25,7 +31,5 @@ public class ScheduledService {
                                 .build())
                         .build())
                 .build();
-        notificationService.sendNotification(fcmMessage);
-        log.info("보내졌습니다!");
     }
 }

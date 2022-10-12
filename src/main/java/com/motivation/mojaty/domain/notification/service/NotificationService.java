@@ -30,7 +30,6 @@ public class NotificationService {
 
     @Transactional
     public void saveNotification(NotificationCreateRequestDto req) {
-        log.info(">>>>>>>>>>>saveNotification");
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
 
@@ -40,7 +39,7 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void sendNotification(FcmMessage req) {
+    public void sendNotification(FcmMessage req) throws ExecutionException, InterruptedException {
         Message message = Message.builder()
                 .setToken(req.getMessage().getToken())
                 .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
@@ -48,12 +47,7 @@ public class NotificationService {
                         .build())
                 .build();
 
-        String response = null;
-        try {
-            response = FirebaseMessaging.getInstance().sendAsync(message).get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error(e.getMessage());
-        }
+        String response = FirebaseMessaging.getInstance().sendAsync(message).get();
         log.info(">>>>Send message : " + response);
     }
 
@@ -64,7 +58,6 @@ public class NotificationService {
         Notification notification = notificationRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        log.info(">>>>>>>메세지 토큰 : " + notification.getToken());
         return notification.getToken();
     }
 
