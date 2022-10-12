@@ -4,10 +4,7 @@ import com.motivation.mojaty.domain.notification.service.NotificationService;
 import com.motivation.mojaty.domain.notification.service.ScheduledService;
 import com.motivation.mojaty.domain.notification.web.dto.request.NotificationCreateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,10 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificationApiController {
 
     private final NotificationService notificationService;
-    private final ScheduledService scheduledService;
 
     @PostMapping("/new")
     public void saveNotification(@RequestBody NotificationCreateRequestDto req) {
         notificationService.saveNotification(req);
+    }
+
+    @DeleteMapping("/notification/delete")
+    public void deleteNotification() {
+        notificationService.deleteNotification();
     }
 }

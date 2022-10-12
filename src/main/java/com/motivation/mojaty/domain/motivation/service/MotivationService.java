@@ -30,34 +30,8 @@ public class MotivationService {
         motivationRepository.save(req.toEntity());
     }
 
-    public List<MotivationResponseDto> getMotivationAll(int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, 20);
-        return motivationRepository.findAll(pageable).stream()
-                .map(MotivationResponseDto::new)
-                .collect(toList());
-    }
-
-    public List<MotivationResponseDto> getMotivationByKind(MotivationKind kind, int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, 20);
-        return motivationRepository.findAll(pageable).stream()
-                .filter(m -> m.getMotivationKind().equals(kind))
-                .map(MotivationResponseDto::new)
-                .collect(toList());
-    }
-
-    public List<MotivationResponseDto> getMotivationByKindAndContent(MotivationKind kind, ContentKind content, int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, 20);
-        return motivationRepository.findAll(pageable).stream()
-                .filter(m -> m.getMotivationKind().equals(kind))
-                .filter(m -> m.getContentKind().equals(content))
-                .map(MotivationResponseDto::new)
-                .collect(toList());
-    }
-
-    public List<MotivationResponseDto> getMotivationByContent(ContentKind content, int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, 20);
-        return motivationRepository.findAll(pageable).stream()
-                .filter(m -> m.getContentKind().equals(content))
+    public List<MotivationResponseDto> getMotivationAll() {
+        return motivationRepository.findAll().stream()
                 .map(MotivationResponseDto::new)
                 .collect(toList());
     }
