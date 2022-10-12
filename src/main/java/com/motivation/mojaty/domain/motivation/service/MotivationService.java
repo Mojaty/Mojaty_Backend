@@ -35,4 +35,5 @@ public class MotivationService {
                 .map(MotivationResponseDto::new)
                 .collect(toList());
     }
+
 }

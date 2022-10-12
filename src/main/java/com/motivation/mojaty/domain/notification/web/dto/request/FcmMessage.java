@@ -10,21 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FcmMessage {
 
-    private Message message;
-
-    @Builder
-    @AllArgsConstructor
-    @Getter
-    public static class Message {
-        private String token;
-        private Notification notification;
-    }
-
-    @Builder
-    @AllArgsConstructor
-    @Getter
-    public static class Notification {
-        private String title;
-        private String body;
-    }
+    private String token;
+    private String title;
+    private String body;
 }

@@ -41,9 +41,9 @@ public class NotificationService {
 
     public void sendNotification(FcmMessage req) throws ExecutionException, InterruptedException {
         Message message = Message.builder()
-                .setToken(req.getMessage().getToken())
+                .setToken(req.getToken())
                 .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
-                        .setNotification(new WebpushNotification(req.getMessage().getNotification().getTitle(), req.getMessage().getNotification().getBody()))
+                        .setNotification(new WebpushNotification(req.getTitle(), req.getBody()))
                         .build())
                 .build();
 
