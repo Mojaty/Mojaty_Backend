@@ -23,13 +23,9 @@ public class FCMInitializer {
     @PostConstruct
     public void initialize() {
         try {
-            GoogleCredentials googleCredentials = GoogleCredentials
-                    .fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream());
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(googleCredentials)
-                    .build();
+                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream())).build();
             FirebaseApp.initializeApp(options);
-            googleCredentials.refreshIfExpired();
         } catch (IOException e) {
             log.info(">>>>>>>>FCM error");
             log.error(">>>>>>FCM error message : " + e.getMessage());

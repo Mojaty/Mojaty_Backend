@@ -20,7 +20,7 @@ public class Motivation {
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(STRING)
@@ -32,6 +32,15 @@ public class Motivation {
     @Builder
     public Motivation(String content, MotivationKind motivationKind, ContentKind contentKind) {
         this.content = content;
+        this.motivationKind = motivationKind;
+        this.contentKind = contentKind;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void updateKinds(MotivationKind motivationKind, ContentKind contentKind) {
         this.motivationKind = motivationKind;
         this.contentKind = contentKind;
     }
