@@ -31,6 +31,10 @@ public class MotivationService {
 
     @Transactional
     public void createMotivation(MotivationCreateRequestDto req) {
+        Motivation motivation = req.toEntity();
+        User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
+        motivation.confirmUser(user);
         motivationRepository.save(req.toEntity());
     }
 
@@ -39,6 +43,11 @@ public class MotivationService {
         Motivation motivation = req.toEntity();
         String imgUrl = fileService.saveFile(req.getFile());
         motivation.updateContent(imgUrl);
+
+        User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
+        motivation.confirmUser(user);
+
         motivationRepository.save(motivation);
     }
 
@@ -52,6 +61,13 @@ public class MotivationService {
     public void updateMotivation(Long motivationId, MotivationImageRequestDto req) throws IOException {
         Motivation motivation = motivationRepository.findById(motivationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOTIVATION_NOT_FOUND));
+
+        User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
+
+        if(!motivation.getUser().getEmail().equals(user.getEmail())) {
+            throw new CustomException(ErrorCode.DIFFERENT_USER);
+        }
 
         fileService.deleteFile(motivation.getContent());
         motivation.updateKinds(req.getMotivationKind(), req.getContentKind());
@@ -72,5 +88,11 @@ public class MotivationService {
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
 
+        if(!motivation.getUser().getEmail().equals(user.getEmail())) {
+            throw new CustomException(ErrorCode.DIFFERENT_USER);
+        }
+
+        fileService.deleteFile(motivation.getContent());
+        motivationRepository.delete(motivation);
     }
 }
