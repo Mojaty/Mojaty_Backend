@@ -1,5 +1,6 @@
 package com.motivation.mojaty.domain.user.domain;
 
+import com.motivation.mojaty.domain.motivation.domain.Motivation;
 import com.motivation.mojaty.domain.user.domain.type.Role;
 import com.motivation.mojaty.global.exception.application.CustomException;
 import com.motivation.mojaty.global.exception.application.ErrorCode;
@@ -9,6 +10,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.EnumType.*;
 import static javax.persistence.GenerationType.*;
@@ -39,6 +43,9 @@ public class User {
     @Enumerated(STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private final List<Motivation> motivationList = new ArrayList<>();
+
     @Builder
     public User(String email, String nickname, String phoneNumber, String password) {
         this.email = email;
@@ -68,5 +75,9 @@ public class User {
         if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.NOT_MATCH_PASSWORD);
         }
+    }
+
+    public void addMotivation(Motivation motivation) {
+        motivationList.add(motivation);
     }
 }

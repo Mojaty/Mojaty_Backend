@@ -2,6 +2,7 @@ package com.motivation.mojaty.domain.motivation.domain;
 
 import com.motivation.mojaty.domain.motivation.domain.type.ContentKind;
 import com.motivation.mojaty.domain.motivation.domain.type.MotivationKind;
+import com.motivation.mojaty.domain.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,10 @@ public class Motivation {
     @Enumerated(STRING) // 컨텐츠 종류(영상, 사진)
     private ContentKind contentKind;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
     public Motivation(String content, MotivationKind motivationKind, ContentKind contentKind) {
         this.content = content;
@@ -43,5 +48,10 @@ public class Motivation {
     public void updateKinds(MotivationKind motivationKind, ContentKind contentKind) {
         this.motivationKind = motivationKind;
         this.contentKind = contentKind;
+    }
+
+    public void confirmUser(User user) {
+        this.user = user;
+        user.addMotivation(this);
     }
 }

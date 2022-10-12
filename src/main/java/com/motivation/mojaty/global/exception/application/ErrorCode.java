@@ -21,7 +21,8 @@ public enum ErrorCode {
     INVALID_TOKEN(401, "무효한 토큰입니다."),
     NOT_MATCH_TOKEN(402, "토큰이 일치하지 않습니다."),
     RETRY_LOGIN(402, "로그인을 다시 해주세요."),
-    MOTIVATION_NOT_FOUND(405, "컨텐츠를 찾을 수 없습니다.");
+    MOTIVATION_NOT_FOUND(405, "컨텐츠를 찾을 수 없습니다."),
+    DIFFERENT_USER(407, "다른 유저의 것입니다.");
 
     private final int status;
     private final String message;
