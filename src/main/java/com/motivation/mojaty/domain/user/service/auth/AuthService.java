@@ -43,8 +43,9 @@ public class AuthService {
                 .build();
     }
 
-    public TokenResponseDto getNewAccessToken(HttpServletRequest req) {
-        String refreshToken = jwtProvider.resolveRefreshToken(req);
+    public TokenResponseDto getNewAccessToken(HttpServletRequest request) {
+        log.info(">>>>>>>>>>>getNewAccessToken");
+        String refreshToken = jwtProvider.resolveRefreshToken(request);
         jwtProvider.validateRefreshToken(refreshToken);
         jwtProvider.checkRefreshToken(refreshToken);
 
@@ -52,6 +53,7 @@ public class AuthService {
 
         return TokenResponseDto.builder()
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 }

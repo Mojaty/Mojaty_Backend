@@ -1,8 +1,5 @@
 package com.motivation.mojaty.global.provider.jwt;
 
-import com.motivation.mojaty.domain.user.web.dto.auth.req.LoginRequestDto;
-import com.motivation.mojaty.global.exception.application.CustomException;
-import com.motivation.mojaty.global.exception.application.ErrorCode;
 import com.motivation.mojaty.global.exception.jwt.ExpiredTokenException;
 import com.motivation.mojaty.global.exception.jwt.InvalidTokenException;
 import com.motivation.mojaty.global.service.redis.RedisService;
@@ -17,15 +14,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
-import static com.motivation.mojaty.global.provider.jwt.JwtProperties.ACCESS_TOKEN_VALID_TIME;
-import static com.motivation.mojaty.global.provider.jwt.JwtProperties.JWT_HEADER;
+import static com.motivation.mojaty.global.provider.jwt.JwtProperties.*;
 
 @RequiredArgsConstructor
 @Component
@@ -66,7 +61,7 @@ public class JwtProvider {
     }
 
     public String createRefreshToken(String email) {
-        return createJwt(email, JwtProperties.REFRESH_TOKEN_VALID_TIME);
+        return createJwt(email, REFRESH_TOKEN_VALID_TIME);
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -99,6 +94,7 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
+            log.info(">>>>>>>>>refresh token expire");
             throw ExpiredTokenException.EXCEPTION;
         } catch (Exception e) {
             throw InvalidTokenException.EXCEPTION;

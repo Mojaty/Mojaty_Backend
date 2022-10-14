@@ -15,7 +15,7 @@ public class ScheduledService {
 
     private final NotificationService notificationService;
 
-    @Scheduled(cron = "0 5,11 * * * *") // 새벽 5시와 밤 11시
+    @Scheduled(cron = "0 0 5,11 * * *") // 새벽 5시와 밤 11시
     public void scheduledMessage() throws ExecutionException, InterruptedException {
         notificationService.sendNotification(makeMessage());
         log.info("보내졌습니다!");
