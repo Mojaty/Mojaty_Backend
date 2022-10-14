@@ -35,7 +35,7 @@ public class MotivationService {
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
         motivation.confirmUser(user);
-        motivationRepository.save(req.toEntity());
+        motivationRepository.save(motivation);
     }
 
     @Transactional
@@ -62,12 +62,7 @@ public class MotivationService {
         Motivation motivation = motivationRepository.findById(motivationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOTIVATION_NOT_FOUND));
 
-        User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
-                .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
-
-        if(!motivation.getUser().getEmail().equals(user.getEmail())) {
-            throw new CustomException(ErrorCode.DIFFERENT_USER);
-        }
+        validateMotivationFromUser(motivation);
 
         fileService.deleteFile(motivation.getContent());
         motivation.updateKinds(req.getMotivationKind(), req.getContentKind());
@@ -85,14 +80,18 @@ public class MotivationService {
         Motivation motivation = motivationRepository.findById(motivationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOTIVATION_NOT_FOUND));
 
+        validateMotivationFromUser(motivation);
+
+        fileService.deleteFile(motivation.getContent());
+        motivationRepository.delete(motivation);
+    }
+
+    private void validateMotivationFromUser(Motivation motivation) {
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
 
         if(!motivation.getUser().getEmail().equals(user.getEmail())) {
             throw new CustomException(ErrorCode.DIFFERENT_USER);
         }
-
-        fileService.deleteFile(motivation.getContent());
-        motivationRepository.delete(motivation);
     }
 }

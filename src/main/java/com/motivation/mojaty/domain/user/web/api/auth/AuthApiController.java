@@ -24,7 +24,7 @@ public class AuthApiController {
         return authService.login(request);
     }
 
-    @PutMapping("/refresh")
+    @GetMapping("/refresh")
     public TokenResponseDto getNewAccessToken(HttpServletRequest req) {
         return authService.getNewAccessToken(req);
     }

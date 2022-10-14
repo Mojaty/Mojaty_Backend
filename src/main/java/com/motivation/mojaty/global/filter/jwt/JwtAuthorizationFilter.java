@@ -29,7 +29,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info(">>>>>>>>>>>>doFilter");
         String token = jwtProvider.resolveToken(request);
-        log.info("token value {}", token);
+        log.info("token value = {}", token);
         if (token != null) setAuthentication(token);
         filterChain.doFilter(request, response);
     }

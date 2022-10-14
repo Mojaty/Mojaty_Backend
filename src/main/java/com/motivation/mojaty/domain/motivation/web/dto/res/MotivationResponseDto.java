@@ -9,10 +9,12 @@ public class MotivationResponseDto {
     private final String content;
     private final String motivationKind;
     private final String contentKind;
+    private final String nickname;
 
     public MotivationResponseDto(Motivation motivation) {
         this.content = motivation.getContent();
         this.motivationKind = motivation.getMotivationKind().name();
         this.contentKind = motivation.getContentKind().name();
+        this.nickname = motivation.getUser().getNickname();
     }
 }
