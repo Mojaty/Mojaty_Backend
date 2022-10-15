@@ -14,15 +14,24 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @Slf4j
-public class MethodAop {
+public class DomainAop implements Aop {
 
-    @Pointcut("execution(* com.motivation.mojaty..*.*(..))")
+    @Pointcut("execution(* com.motivation.mojaty.domain..service..*.*(..))")
     private void cut() {}
 
     @Before("cut()")
+    @Override
     public void before(JoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-        log.info(">>>>>>>>>>starting method name = {}", method.getName());
+        log.info(">>>>>>>>>>starting method = {}", method.getName());
+    }
+
+    @AfterReturning("cut()")
+    @Override
+    public void after(JoinPoint joinPoint) {
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Method method = methodSignature.getMethod();
+        log.info(">>>>>>>>>>end method = {}", method.getName());
     }
 }
