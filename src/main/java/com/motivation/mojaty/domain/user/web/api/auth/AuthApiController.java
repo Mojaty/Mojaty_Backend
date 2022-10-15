@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @RestController
-@Slf4j
 public class AuthApiController {
 
     private final AuthService authService;

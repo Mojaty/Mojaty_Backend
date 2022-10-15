@@ -14,14 +14,12 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
-@Slf4j
 public class UserApiController {
 
     private final UserService userService;
 
     @PostMapping("/join")
     public Long join(@RequestBody UserJoinRequestDto req) {
-        log.info(">>>>>>>>> success " + req.toString());
         return userService.join(req);
     }
 

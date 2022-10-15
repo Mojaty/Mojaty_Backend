@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ScheduledService {
 
     private final NotificationService notificationService;
@@ -18,7 +17,6 @@ public class ScheduledService {
     @Scheduled(cron = "0 0 5,11 * * *") // 새벽 5시와 밤 11시
     public void scheduledMessage() throws ExecutionException, InterruptedException {
         notificationService.sendNotification(makeMessage());
-        log.info("보내졌습니다!");
     }
 
     private FcmMessage makeMessage() {

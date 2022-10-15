@@ -19,7 +19,6 @@ import static com.motivation.mojaty.global.provider.jwt.JwtProperties.REFRESH_TO
 
 @RequiredArgsConstructor
 @Service
-@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -44,7 +43,6 @@ public class AuthService {
     }
 
     public TokenResponseDto getNewAccessToken(HttpServletRequest request) {
-        log.info(">>>>>>>>>>>getNewAccessToken");
         String refreshToken = jwtProvider.resolveRefreshToken(request);
         jwtProvider.validateRefreshToken(refreshToken);
         jwtProvider.checkRefreshToken(refreshToken);
