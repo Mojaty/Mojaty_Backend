@@ -24,7 +24,6 @@ import static com.motivation.mojaty.global.provider.jwt.JwtProperties.*;
 
 @RequiredArgsConstructor
 @Component
-@Slf4j
 public class JwtProvider {
 
     private final RedisService redisService;
@@ -94,7 +93,6 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            log.info(">>>>>>>>>refresh token expire");
             throw ExpiredTokenException.EXCEPTION;
         } catch (Exception e) {
             throw InvalidTokenException.EXCEPTION;

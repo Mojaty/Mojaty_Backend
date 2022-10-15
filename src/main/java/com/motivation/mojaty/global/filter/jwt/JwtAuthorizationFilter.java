@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-@Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -27,9 +26,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info(">>>>>>>>>>>>doFilter");
         String token = jwtProvider.resolveToken(request);
-        log.info("token value = {}", token);
         if (token != null) setAuthentication(token);
         filterChain.doFilter(request, response);
     }
