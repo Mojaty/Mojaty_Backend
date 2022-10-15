@@ -22,7 +22,6 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
@@ -48,7 +47,6 @@ public class NotificationService {
                 .build();
 
         String response = FirebaseMessaging.getInstance().sendAsync(message).get();
-        log.info(">>>>Send message : " + response);
     }
 
     public String getNotificationToken() {

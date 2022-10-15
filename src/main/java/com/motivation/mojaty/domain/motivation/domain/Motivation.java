@@ -25,9 +25,9 @@ public class Motivation {
     private String content;
 
     @Enumerated(STRING)
-    private MotivationKind motivationKind; // 동기 부여 종류
+    private MotivationKind motivationKind;
 
-    @Enumerated(STRING) // 컨텐츠 종류(영상, 사진)
+    @Enumerated(STRING)
     private ContentKind contentKind;
 
     @ManyToOne(fetch = FetchType.LAZY)

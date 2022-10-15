@@ -5,6 +5,7 @@ import com.motivation.mojaty.domain.motivation.web.dto.req.MotivationImageReques
 import com.motivation.mojaty.domain.motivation.web.dto.req.MotivationCreateRequestDto;
 import com.motivation.mojaty.domain.motivation.web.dto.res.MotivationResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
