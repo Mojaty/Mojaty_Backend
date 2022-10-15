@@ -17,7 +17,6 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class FileService {
 
     @Value("${cloud.aws.s3.bucket}")
@@ -40,7 +39,6 @@ public class FileService {
 
     public void deleteFile(String imgUrl) {
         String imgPath = imgUrl.substring(IMAGE_URL.length());
-        log.info("imgPath : " + imgPath);
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, imgPath));
     }
 }
