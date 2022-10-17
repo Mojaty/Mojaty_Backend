@@ -6,10 +6,12 @@ import com.motivation.mojaty.domain.motivation.domain.type.MotivationKind;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class MotivationCreateRequestDto {
 
     private MotivationKind motivationKind;

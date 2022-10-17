@@ -1,9 +1,6 @@
 package com.motivation.mojaty.domain.user.web.dto.auth.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.servlet.http.Cookie;
 
@@ -11,6 +8,7 @@ import javax.servlet.http.Cookie;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class TokenResponseDto {
 
     private String accessToken;
