@@ -24,6 +24,7 @@ import static java.util.stream.Collectors.*;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class MotivationService {
 
     private final MotivationRepository motivationRepository;

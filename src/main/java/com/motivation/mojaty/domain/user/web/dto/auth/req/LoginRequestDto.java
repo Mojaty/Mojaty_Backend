@@ -1,10 +1,10 @@
 package com.motivation.mojaty.domain.user.web.dto.auth.req;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class LoginRequestDto {
 
     private String email;

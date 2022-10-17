@@ -1,11 +1,13 @@
 package com.motivation.mojaty.domain.user.web.dto.user.req;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Getter
+@ToString
 public class UserWithdrawalRequestDto {
 
     @NotNull(message = "비밀번호를 입력해주세요.")
