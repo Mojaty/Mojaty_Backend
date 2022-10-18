@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Slf4j
 public class MotivationService {
 
@@ -34,7 +34,6 @@ public class MotivationService {
     private final FileService fileService;
     private final FcmService fcmService;
 
-    @Transactional
     public void createMotivation(MotivationCreateRequestDto req) throws ExecutionException, InterruptedException {
         Motivation motivation = req.toEntity();
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
@@ -44,8 +43,7 @@ public class MotivationService {
         fcmService.sendMessages(user.getNickname());
     }
 
-    @Transactional
-    public void createImageMotivation(MotivationImageRequestDto req) throws IOException {
+    public void createImageMotivation(MotivationImageRequestDto req) throws IOException, ExecutionException, InterruptedException {
         Motivation motivation = req.toEntity();
         String imgUrl = fileService.saveFile(req.getFile());
         motivation.updateContent(imgUrl);
@@ -55,16 +53,17 @@ public class MotivationService {
         motivation.confirmUser(user);
 
         motivationRepository.save(motivation);
+        fcmService.sendMessages(user.getNickname());
     }
 
+    @Transactional(readOnly = true)
     public MotivationResponseDto getMotivationById(Long motivationId) {
         return motivationRepository.findById(motivationId)
                 .map(MotivationResponseDto::new)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOTIVATION_NOT_FOUND));
     }
 
-    @Transactional
-    public void updateMotivation(Long motivationId, MotivationImageRequestDto req) throws IOException {
+    public void updateImageMotivation(Long motivationId, MotivationImageRequestDto req) throws IOException {
         Motivation motivation = motivationRepository.findById(motivationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOTIVATION_NOT_FOUND));
 
@@ -75,13 +74,22 @@ public class MotivationService {
         motivation.updateContent(fileService.saveFile(req.getFile()));
     }
 
+    public void updateMotivation(Long motivationId, MotivationCreateRequestDto req) {
+        Motivation motivation = motivationRepository.findById(motivationId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MOTIVATION_NOT_FOUND));
+
+        validateMotivationFromUser(motivation);
+        motivation.updateKinds(req.getMotivationKind(), req.getContentKind());
+        motivation.updateContent(req.getContent());
+    }
+
+    @Transactional(readOnly = true)
     public List<MotivationResponseDto> getMotivationAll() {
         return motivationRepository.findAll().stream()
                 .map(MotivationResponseDto::new)
                 .collect(toList());
     }
 
-    @Transactional
     public void deleteMotivation(Long motivationId) {
         Motivation motivation = motivationRepository.findById(motivationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MOTIVATION_NOT_FOUND));

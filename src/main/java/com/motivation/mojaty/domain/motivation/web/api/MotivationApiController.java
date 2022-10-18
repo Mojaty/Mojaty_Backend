@@ -25,7 +25,7 @@ public class MotivationApiController {
     }
 
     @PostMapping("/new/image")
-    public void createImageMotivation(MotivationImageRequestDto req) throws IOException {
+    public void createImageMotivation(MotivationImageRequestDto req) throws IOException, ExecutionException, InterruptedException {
         motivationService.createImageMotivation(req);
     }
 
@@ -39,9 +39,15 @@ public class MotivationApiController {
         return motivationService.getMotivationById(motivationId);
     }
 
+    @PutMapping("/{motivationId}/edit/Image")
+    public void updateImageMotivation(@PathVariable("motivationId") Long motivationId,
+                                 MotivationImageRequestDto req) throws IOException {
+        motivationService.updateImageMotivation(motivationId, req);
+    }
+
     @PutMapping("/{motivationId}/edit")
     public void updateMotivation(@PathVariable("motivationId") Long motivationId,
-                                 MotivationImageRequestDto req) throws IOException {
+                                 @RequestBody MotivationCreateRequestDto req) {
         motivationService.updateMotivation(motivationId, req);
     }
 

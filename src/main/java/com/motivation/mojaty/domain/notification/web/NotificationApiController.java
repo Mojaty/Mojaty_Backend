@@ -1,7 +1,6 @@
 package com.motivation.mojaty.domain.notification.web;
 
 import com.motivation.mojaty.domain.notification.service.NotificationService;
-import com.motivation.mojaty.domain.notification.service.ScheduledService;
 import com.motivation.mojaty.domain.notification.web.dto.request.NotificationCreateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
