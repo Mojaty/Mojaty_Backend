@@ -16,19 +16,14 @@ import java.util.List;
 @Slf4j
 public class FCMInitializer {
 
-    private static final String MESSAGING_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
-    private static final String[] SCOPES = { MESSAGING_SCOPE };
-    private static final String FIREBASE_CONFIG_PATH = "mojaty-e4362-firebase-adminsdk-juq3h-9d6c888b5c.json";
+    private static final String FIREBASE_CONFIG_PATH = "mojaty-68657-firebase-adminsdk-15wkk-6aa4233f0f.json";
 
     @PostConstruct
-    public void initialize() {
-        try {
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream())).build();
-            FirebaseApp.initializeApp(options);
-        } catch (IOException e) {
-            log.info(">>>>>>>>FCM error");
-            log.error(">>>>>>FCM error message : " + e.getMessage());
-        }
+    public void initialize() throws IOException {
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream()))
+                .setProjectId("1030872960649")
+                .build();
+        FirebaseApp.initializeApp(options);
     }
 }

@@ -16,13 +16,13 @@ public enum ErrorCode {
     NOT_MATCH_PASSWORD(401, "비밀번호가 일치하지 않습니다."),
 
     USER_NOT_LOGIN(403, "로그인 후 이용해주세요"),
-
     EXPIRED_TOKEN(401, "만료된 토큰입니다."),
     INVALID_TOKEN(401, "무효한 토큰입니다."),
+
     NOT_MATCH_TOKEN(402, "토큰이 일치하지 않습니다."),
     RETRY_LOGIN(402, "로그인을 다시 해주세요."),
-    MOTIVATION_NOT_FOUND(405, "컨텐츠를 찾을 수 없습니다."),
-    DIFFERENT_USER(407, "다른 유저의 것입니다.");
+    MOTIVATION_NOT_FOUND(404, "컨텐츠를 찾을 수 없습니다."),
+    DIFFERENT_USER(401, "다른 유저의 것입니다.");
 
     private final int status;
     private final String message;

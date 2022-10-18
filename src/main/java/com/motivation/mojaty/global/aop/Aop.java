@@ -24,7 +24,7 @@ public class Aop {
 
         for(Object obj : args) {
             log.info("type = {}", obj.getClass().getSimpleName());
-            log.info("value : " + obj);
+            log.info("value = {}", obj);
         }
     }
 
@@ -32,7 +32,6 @@ public class Aop {
     public void after(JoinPoint joinPoint, Object object) {
         Method method = createMethodSignature(joinPoint);
         log.info(">>>>>>>>>>end method = {}", method.getName());
-        log.info(">>>>>>>>>>type = {}", object.getClass().getSimpleName());
     }
 
     private Method createMethodSignature(JoinPoint joinPoint) {
