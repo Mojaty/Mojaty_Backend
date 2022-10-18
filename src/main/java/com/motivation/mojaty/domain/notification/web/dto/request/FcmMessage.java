@@ -8,7 +8,7 @@ import lombok.*;
 @ToString
 public class FcmMessage {
 
-    private String token;
+    private String requestId;
     private String title;
     private String body;
 }

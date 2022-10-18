@@ -18,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,25 +40,28 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void sendNotification(FcmMessage req) throws ExecutionException, InterruptedException {
+    public String sendNotification(String token, String nickname) throws ExecutionException, InterruptedException {
         Message message = Message.builder()
-                .setToken(req.getToken())
-                .setWebpushConfig(WebpushConfig.builder().putHeader("ttl", "300")
-                        .setNotification(new WebpushNotification(req.getTitle(), req.getBody()))
+                .setWebpushConfig(WebpushConfig.builder()
+                        .setNotification(WebpushNotification.builder()
+                                .setTitle("Mojaty")
+                                .setBody(nickname + "님이 모티티를 등록하였습니다.")
+                                .build())
                         .build())
+                .putData("requestId", "https://www.youtube.com/") //테스트
+                .setToken(token)
                 .build();
 
-        String response = FirebaseMessaging.getInstance().sendAsync(message).get();
+        return FirebaseMessaging.getInstance().sendAsync(message).get();
     }
 
-    public String getNotificationToken() {
+    public List<String> getNotificationTokenAll() {
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
 
-        Notification notification = notificationRepository.findByUser(user)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        return notification.getToken();
+        return notificationRepository.findAll().stream()
+                .map(Notification::getToken)
+                .collect(Collectors.toList());
     }
 
     public void deleteNotification() {
@@ -68,4 +73,5 @@ public class NotificationService {
 
         notificationRepository.delete(notification);
     }
+
 }

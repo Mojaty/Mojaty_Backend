@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class MotivationApiController {
     private final MotivationService motivationService;
 
     @PostMapping("/new")
-    public void createMotivation(@RequestBody MotivationCreateRequestDto req) {
+    public void createMotivation(@RequestBody MotivationCreateRequestDto req) throws ExecutionException, InterruptedException {
         motivationService.createMotivation(req);
     }
 

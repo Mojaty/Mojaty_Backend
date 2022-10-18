@@ -5,6 +5,7 @@ import com.motivation.mojaty.domain.motivation.domain.MotivationRepository;
 import com.motivation.mojaty.domain.motivation.web.dto.req.MotivationImageRequestDto;
 import com.motivation.mojaty.domain.motivation.web.dto.req.MotivationCreateRequestDto;
 import com.motivation.mojaty.domain.motivation.web.dto.res.MotivationResponseDto;
+import com.motivation.mojaty.domain.notification.service.FcmService;
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
 import com.motivation.mojaty.global.exception.application.CustomException;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static java.util.stream.Collectors.*;
 
@@ -30,14 +32,16 @@ public class MotivationService {
     private final MotivationRepository motivationRepository;
     private final UserRepository userRepository;
     private final FileService fileService;
+    private final FcmService fcmService;
 
     @Transactional
-    public void createMotivation(MotivationCreateRequestDto req) {
+    public void createMotivation(MotivationCreateRequestDto req) throws ExecutionException, InterruptedException {
         Motivation motivation = req.toEntity();
         User user = userRepository.findByEmail(SecurityProvider.getLoginUserEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.RETRY_LOGIN));
         motivation.confirmUser(user);
         motivationRepository.save(motivation);
+        fcmService.sendMessages(user.getNickname());
     }
 
     @Transactional
