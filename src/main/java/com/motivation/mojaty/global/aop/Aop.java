@@ -32,6 +32,12 @@ public class Aop {
     public void after(JoinPoint joinPoint, Object object) {
         Method method = createMethodSignature(joinPoint);
         log.info(">>>>>>>>>>end method = {}", method.getName());
+        if(object != null) {
+            log.info(">>>>>>>>>>type = {}", object.getClass().getSimpleName());
+        }
+        else {
+            log.info(">>>>>>>>>>type = void");
+        }
     }
 
     private Method createMethodSignature(JoinPoint joinPoint) {
