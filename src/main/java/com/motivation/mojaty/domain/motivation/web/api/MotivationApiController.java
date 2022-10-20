@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/motivation")
+@Slf4j
 public class MotivationApiController {
 
     private final MotivationService motivationService;
@@ -39,7 +40,7 @@ public class MotivationApiController {
         return motivationService.getMotivationById(motivationId);
     }
 
-    @PutMapping("/{motivationId}/edit/Image")
+    @PutMapping("/{motivationId}/edit/image")
     public void updateImageMotivation(@PathVariable("motivationId") Long motivationId,
                                  MotivationImageRequestDto req) throws IOException {
         motivationService.updateImageMotivation(motivationId, req);
