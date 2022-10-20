@@ -69,7 +69,9 @@ public class MotivationService {
 
         validateMotivationFromUser(motivation);
 
-        fileService.deleteFile(motivation.getContent());
+        if(motivation.getContent().contains(FileService.IMAGE_URL)) {
+            fileService.deleteFile(motivation.getContent());
+        }
         motivation.updateKinds(req.getMotivationKind(), req.getContentKind());
         motivation.updateContent(fileService.saveFile(req.getFile()));
     }

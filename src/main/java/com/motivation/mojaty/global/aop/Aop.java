@@ -25,6 +25,7 @@ public class Aop {
         for(Object obj : args) {
             log.info("type = {}", obj.getClass().getSimpleName());
             log.info("value = {}", obj);
+
         }
     }
 
