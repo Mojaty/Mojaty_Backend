@@ -7,14 +7,12 @@ import com.google.firebase.messaging.WebpushNotification;
 import com.motivation.mojaty.domain.notification.domain.Notification;
 import com.motivation.mojaty.domain.notification.domain.NotificationRepository;
 import com.motivation.mojaty.domain.notification.web.dto.request.NotificationCreateRequestDto;
-import com.motivation.mojaty.domain.notification.web.dto.request.FcmMessage;
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
 import com.motivation.mojaty.global.exception.application.CustomException;
 import com.motivation.mojaty.global.exception.application.ErrorCode;
 import com.motivation.mojaty.global.provider.security.SecurityProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +38,7 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public String sendNotification(String token, String nickname) throws ExecutionException, InterruptedException {
+    public void sendNotification(String token, String nickname) throws ExecutionException, InterruptedException {
         Message message = Message.builder()
                 .setWebpushConfig(WebpushConfig.builder()
                         .setNotification(WebpushNotification.builder()
@@ -52,7 +50,7 @@ public class NotificationService {
                 .setToken(token)
                 .build();
 
-        return FirebaseMessaging.getInstance().sendAsync(message).get();
+        FirebaseMessaging.getInstance().sendAsync(message).get();
     }
 
     public List<String> getNotificationTokenAll() {
