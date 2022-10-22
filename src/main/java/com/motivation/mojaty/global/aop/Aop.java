@@ -33,7 +33,6 @@ public class Aop {
         for(Object obj : args) {
             log.info(TYPE_MESSAGE, obj.getClass().getSimpleName());
             log.info(VALUE_MESSAGE, obj);
-
         }
     }
 

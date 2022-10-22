@@ -8,7 +8,22 @@ import lombok.*;
 @ToString
 public class FcmMessage {
 
-    private String requestId;
-    private String title;
-    private String body;
+    private Message message;
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Message {
+        private Notification notification;
+        private String token;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Notification {
+        private String title;
+        private String body;
+        private String image;
+    }
 }
