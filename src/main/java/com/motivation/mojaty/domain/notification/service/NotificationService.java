@@ -42,13 +42,16 @@ public class NotificationService {
         Message message = Message.builder()
                 .setWebpushConfig(WebpushConfig.builder()
                         .setNotification(WebpushNotification.builder()
+//                                .putCustomData("image", "https://bssm-re-code.s3.ap-northeast-2.amazonaws.com/4e5c34b1-7138-48c7-8270-c469c304de11_KakaoTalk_Image_2022-10-21-18-30-23.png")
                                 .setTitle("Mojaty")
                                 .setBody(nickname + "님이 모티티를 등록하였습니다.")
                                 .build())
                         .build())
-                .putData("requestId", "https://www.youtube.com/") //테스트
+//                .putData("requestId", "https://www.youtube.com/")
+
                 .setToken(token)
                 .build();
+//        FcmMessage fcmMessage =
 
         FirebaseMessaging.getInstance().sendAsync(message).get();
     }
