@@ -1,5 +1,6 @@
 package com.motivation.mojaty.domain.user.service.user;
 
+import com.motivation.mojaty.domain.notification.service.NotificationService;
 import com.motivation.mojaty.domain.user.domain.User;
 import com.motivation.mojaty.domain.user.domain.UserRepository;
 import com.motivation.mojaty.domain.user.web.dto.user.req.UserJoinRequestDto;
@@ -20,6 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationService notificationService;
 
     @Transactional
     public Long join(UserJoinRequestDto req) {
@@ -67,6 +69,7 @@ public class UserService {
         }
 
         userRepository.delete(user);
+        notificationService.deleteNotification();
         return user.getId();
     }
 }

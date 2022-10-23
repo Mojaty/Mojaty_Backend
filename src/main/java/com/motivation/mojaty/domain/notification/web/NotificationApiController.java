@@ -16,9 +16,4 @@ public class NotificationApiController {
     public void saveNotification(@RequestBody NotificationCreateRequestDto req) {
         notificationService.saveNotification(req);
     }
-
-    @DeleteMapping("/notification/delete")
-    public void deleteNotification() {
-        notificationService.deleteNotification();
-    }
 }
